@@ -266,8 +266,7 @@ class Builder:
     def create_command_groups(self):
         return self.cmd.create_command_groups(self.plugins,cli)
 
-    def test(self):
-        pass
+
 
 if __name__ == "__main__":
     start()
