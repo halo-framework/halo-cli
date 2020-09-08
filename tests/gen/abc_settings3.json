@@ -1,0 +1,76 @@
+{
+	"application_name": "bian_service_domains",
+	"plugins":[
+
+	],
+	"mservices": {
+		"halo_current_account": {
+			"type": "south",
+			"urls": ".\\bian_swgr\\current-account.json",
+			"record": {
+				"name":"Current Account",
+				"id":"37",
+				"methods": {
+					"RetrieveCurrentAccountReferenceIdsExtend": {
+						"added_fields": {
+							"name1": "string",
+							"name2": "number",
+							"name3": "string",
+							"name4": "number"
+						},
+						"field_mappings": {
+							"mapping1": {
+								"from": [
+									{"field1": "string"}
+								],
+								"to": {
+									"field2": "string"
+								},
+								"instructions": "javascript code"
+							}
+						},
+						"collection-filter": [
+							"f1","f2"
+						],
+						"refactor": [
+							{"field": "abc.def.xyz","type": "string"}
+						],
+						"version": "0.1"
+					},
+					"RetrieveCurrentAccountBehaviorQualifierReferenceIdsExtendDepositsandWithdrawals": {
+						"added_fields": {
+							"name1": "string",
+							"name2": "number",
+							"name3": "string",
+							"name4": "number"
+						},
+						"field_mappings": {
+							"mapping1": {
+								"from": [
+									{"field1": "string"}
+								],
+								"to": {
+									"field2": "string"
+								},
+								"instructions": "javascript code"
+							}
+						},
+						"collection-filter": [
+							"f1","f2"
+						],
+						"refactor": [
+							{"field": "abc.def.xyz","type": "string"}
+						],
+						"version": "0.1"
+					}
+				},
+				"sbq": [
+					{"base_method": "abc","name": "sub","values": ["abc","def"]}
+				],
+				"endpoints": [
+					{"base_method": "abc","name": "tst"}
+				]
+			}
+		}
+	}
+}

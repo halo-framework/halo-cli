@@ -1,0 +1,15 @@
+{
+	"application_name": "bian_service_domains",
+	"plugins":[
+
+	],
+	"mservices": {
+		"halo_current_account": {
+			"urls": ".\\a.yml",
+			"record": {
+				"name":"Current Account",
+				"id":"37"
+			}
+		}
+	}
+}

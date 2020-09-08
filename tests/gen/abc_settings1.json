@@ -1,0 +1,66 @@
+{
+	"stages": ["dev","tst","prd"],
+	"application_name": "bian_service_domains",
+	"alias": "yor",
+	"provider_name": "aws",
+	"region": "us-east-1", 
+	"profile_name": "default", 
+	"deploy_tool": "sls",
+	"plugins":[
+					"./base-test-plugin"
+	],
+	"mservices": {
+		"halo_current_account": {
+			"type": "south",
+			"url": "http://127.0.0.1:2000",
+			"overwrite_if_exists": true,
+			"runtime": "python3.7",
+			"framework": "flask",
+			"extra_permissions": [],
+			"base_class": "AbsBianMixin",
+			"base_lib": "halo_bian.bian.abs_bian_srv",
+			"libs": ["halo-bian==0.11.102","halo-aws==0.11.40","boto3==1.9.227"],
+			"urls": ".\\a.yml",
+			"apis": [
+					
+					{
+						"name": "Recaptcha",
+						"url": "https://www.google.com/recaptcha/api/siteverify",
+						"type": "rest"
+					}
+					
+				],
+			"db":{
+				"db_class_name":"halo_bian.bian.db.AbsBianDbMixin"
+			},
+			"dev": {
+				"s3_bucket": "zappa-dlbjcikdv"
+			},
+			"tst": {
+				"s3_bucket": "zappa-wc1r3r3nn"
+			},
+			"prd": {
+				"s3_bucket": "zappa-20bu57w5v"
+			},
+			"plugins":[
+				{
+					"class": "halocli.plugin.plugins.bian.halo_bian_defs_plugin.BianPlugin",
+					"type": "defs"
+				},
+
+				{
+					"class": "halocli.plugin.plugins.bian.halo_bian_mixin_plugin.BianPlugin",
+					"type": "mixin"
+				},
+				{
+					"class": "halocli.plugin.plugins.bian.halo_bian_err_plugin.BianPlugin",
+					"type": "err"
+				}
+			],
+			"record": {
+				"name":"Current Account",
+				"id":"37"
+			}
+		}
+	}
+}

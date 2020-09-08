@@ -1,0 +1,16 @@
+{
+	"plugins": [
+			{
+				"class": "halocli.plugin.plugins.bian.halo_bian_defs_plugin.BianPlugin",
+				"type": "defs"
+			},
+			{
+				"class": "halocli.plugin.plugins.bian.halo_bian_mixin_plugin.BianPlugin",
+				"type": "mixin"
+			},
+			{
+				"class": "halocli.plugin.plugins.bian.halo_bian_err_plugin.BianPlugin",
+				"type": "err"
+			}
+		]
+}
