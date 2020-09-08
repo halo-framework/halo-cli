@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
 # python setup.py sdist bdist_wheel
-# twine upload dist/halolib-0.13.8.tar.gz -r pypitest
-# twine upload dist/halo_bian-0.13.8.tar.gz -r pypi
+# twine upload dist/halo-cli-0.1.tar.gz -r pypi
 setup(
     name='halo-cli',
-    version='0.1',
+    version='0.2',
     #py_modules=['bob'],
     packages=find_packages(),
     include_package_data=True,
@@ -15,7 +14,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        hlo=halocli.main:start
+        hlo=halocli.cli:start
     ''',
     python_requires='>=3.6',
 )
