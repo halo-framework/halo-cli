@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
-
+# python setup.py sdist bdist_wheel
+# twine upload dist/halolib-0.13.8.tar.gz -r pypitest
+# twine upload dist/halo_bian-0.13.8.tar.gz -r pypi
 setup(
     name='halo-cli',
     version='0.1',
