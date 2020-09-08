@@ -231,7 +231,7 @@ class Builder:
         return self.plugin_mngr.get_plugin_instances()
 
     def do_settings(self,settings):
-        self.settings = settings#ImmutableDict(settings)
+        self.settings = settings # consider ImmutableDict(settings)
         self.proxy = HaloProxy(self.cli, self.variables, self.settings)
         self.do_plugins(settings)
         self.plugin_mngr = PluginMngr(self)
@@ -266,6 +266,8 @@ class Builder:
     def create_command_groups(self):
         return self.cmd.create_command_groups(self.plugins,cli)
 
+    def test(self):
+        pass
 
 if __name__ == "__main__":
     start()
