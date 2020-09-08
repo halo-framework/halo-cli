@@ -148,6 +148,10 @@ class Util():
         with open(filename, 'w') as outfile:
             json.dump(data, outfile, indent=4)
 
+    @staticmethod
+    def config_settings(service_name,swagger_path):
+        pass
+
     ######
     @staticmethod
     def analyze_swagger(swagger_file_path):

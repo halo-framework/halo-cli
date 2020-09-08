@@ -238,10 +238,14 @@ class Builder:
 
     def do_plugins(self,settings):
         self.plugins = [
-            "halocli.plugin.plugins.extend_bian_plugin.Plugin",
-            "halocli.plugin.plugins.valid_plugin.Plugin",
-            "halocli.plugin.plugins.install_plugin.Plugin",
-            "halocli.plugin.plugins.test_plugin.Plugin"
+            "halocli.plugin.plugins.bian.extend.extend_bian_plugin.Plugin",
+            "halocli.plugin.plugins.create.create_plugin.Plugin",
+            "halocli.plugin.plugins.schema.schema_plugin.Plugin",
+            "halocli.plugin.plugins.print.print_plugin.Plugin",
+            "halocli.plugin.plugins.info.info_plugin.Plugin",
+            "halocli.plugin.plugins.valid.valid_plugin.Plugin",
+            "halocli.plugin.plugins.config.config_plugin.Plugin",
+            "halocli.plugin.plugins.install.install_plugin.Plugin"
         ]
         if settings and "plugins" in settings:
             for p in settings["plugins"]:

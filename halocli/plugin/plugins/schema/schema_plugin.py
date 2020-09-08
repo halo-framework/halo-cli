@@ -14,19 +14,21 @@ logger = logging.getLogger(__name__)
 
 logging.root.setLevel(logging.INFO)
 
+
 class PluginError(Exception):
     pass
 
+
 class Plugin():
 
-    def __init__(self,halo):
-        #init vars
+    def __init__(self, halo):
+        # init vars
         self.halo = halo
 
-        #init work on halo config
-        #if self.halo.config ...
+        # init work on halo config
+        # if self.halo.config ...
 
-        self.name = 'tester'
+        self.name = 'schema'
         self.desc = 'test settings file'
 
         # set commands
@@ -55,18 +57,17 @@ class Plugin():
             'after:valid:functions': self.after_valid_functions,
         }
 
-        #logger.info('finished plugin')
+        # logger.info('finished plugin')
 
-    def run_plugin(self,options):
+    def run_plugin(self, options):
         self.options = options
-        #do more
-
+        # do more
 
     def before_valid_resources(self):
         pass
 
     def valid_resources(self):
-        if hasattr(self,'options'):
+        if hasattr(self, 'options'):
             for o in self.options:
                 if 'attribute' in o:
                     service = o['attribute']
@@ -79,4 +80,3 @@ class Plugin():
 
     def after_valid_functions(self):
         pass
-
