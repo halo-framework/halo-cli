@@ -48,15 +48,11 @@ class Plugin():
         #init work on halo config
         #if self.halo.config ...
 
-        self.name = 'extend'
-        self.desc = 'extend bian swagger file'
+        self.name = 'cqrs'
+        self.desc = 'ammend bian swagger file for no cqrs'
 
         # set commands
         self.commands = {
-            'testy': {
-                'usage': "test this for your HALO project",
-                'lifecycleEvents': ['resources', 'functions']
-            },
             'method': {
                 'usage': "do this for your HALO project",
                 'lifecycleEvents': ['generate', 'write'],
@@ -153,16 +149,6 @@ class Plugin():
                     new_m['get']['responses']['200']['schema']['items']['properties'] = props
                     new_m['get']['responses']['200']['schema']['example'] = []
                     new_m['get']['operationId'] = new_m['get']['operationId'] + item
-                    for p in props:
-                        if p.endswith("ActionTaskRecord"):
-                            if "methods" in self.halo.settings['mservices'][self.service]['record']:
-                                for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
-                                    if mthd == new_m['get']['operationId']:
-                                        self.halo.cli.log("bq:" + new_m['get']['operationId'])
-                                        props[p]['properties']["ObjectReference"] = {"type":"string"}
-                                        for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
-                                            type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][fld]
-                                            props[p]['properties'][fld] = {"type": type}
                     params = new_m['get']['parameters']
                     for p in params:
                         if p['name'] == "behavior-qualifier":
@@ -182,16 +168,6 @@ class Plugin():
                 m['get']['responses']['200']['schema']['items']['type'] = 'object'
                 m['get']['responses']['200']['schema']['items']['properties'] = props
                 m['get']['responses']['200']['schema']['example'] = []
-                for p in props:
-                    if p.endswith("ActionTaskRecord"):
-                        if "methods" in self.halo.settings['mservices'][self.service]['record']:
-                            for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
-                                if mthd == str(m['get']['operationId']):
-                                    self.halo.cli.log("cr:" + m['get']['operationId'])
-                                    props[p]['properties']["ObjectReference"] = {"type":"string"}
-                                    for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
-                                        type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][fld]
-                                        props[p]['properties'][fld] = {"type":type}
                 m['get']['summary'] = m['get']['summary'].replace("Ids", 'Instances')
                 if 'description' in m['get']:
                     m['get']['description'] = m['get']['description'].replace("Ids", 'Instances')

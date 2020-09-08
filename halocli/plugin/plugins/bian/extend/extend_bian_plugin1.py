@@ -101,7 +101,7 @@ class Plugin():
         if not service:
             raise Exception("no service found")
         self.service = service
-        urls = self.halo.settings['mservices'][service]['record']['path']
+        urls = self.halo.settings['mservices'][service]['urls']
         self.path = path
         self.data = Util.analyze_swagger(urls)
 
@@ -125,28 +125,77 @@ class Plugin():
                 if d.endswith("/behavior-qualifiers/"):
                     logger.debug("bqs:" + str(m))
                     bqs = m['get']['responses']['200']['schema']['example']
-                if 'ReferenceIdsExtend' in m['get']['operationId']:
+                if m['get']['operationId'].endswith('ReferenceIds'):
+                    #new_name = m['get']['operationId']+"Extend"
+                    #if new_name not in self.halo.settings['mservices'][self.service]['record']['methods']:
+                    #    continue
+                    logger.debug("d:" + str(d))
+                    logger.debug(str(m['get']['operationId']) + ':' + str(m['get']['parameters']))
+                    logger.debug(str(m))
                     new_m = copy.deepcopy(m)
+                    # /current-account/{sd-reference-id}/current-account-fulfillment-arrangement/{cr-reference-id}
+                    # /current-account/{sd-reference-id}/current-account-fulfillment-arrangement/extend
+                    new_m['get']['operationId'] = m['get']['operationId'] + "Extend"
                     tmp[d] = new_m
         # fix the response and add
         for k in tmp:
             # bq methods
-            ref_m = tmp[k]
-            new_m = copy.deepcopy(ref_m)
-            props = new_m['get']['responses']['200']['schema']['items']['properties']
-            for p in props:
-                if "methods" in self.halo.settings['mservices'][self.service]['record']:
-                    for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
-                        if mthd == new_m['get']['operationId']:
-                            for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
-                                if p.endswith(target):
-                                    self.halo.cli.log(new_m['get']['operationId'])
-                                    #props[p]['properties']["ObjectReference"] = {"type":"string"}
-                                    for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
-                                        type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
-                                        props[p]['properties'][fld] = {"type": type}
-            data['paths'][k] = new_m
-
+            if "{cr-reference-id}" in k:
+                for item in bqs:
+                    ref_key = k.replace("{behavior-qualifier}", item.lower()) + "{bq-reference-id}/"
+                    ref_m = data['paths'][ref_key]
+                    new_m = copy.deepcopy(ref_m)
+                    props = new_m['get']['responses']['200']['schema']['properties']
+                    key = k.replace("{behavior-qualifier}", item.lower()) + "extend"
+                    m = tmp[k]
+                    new_m = copy.deepcopy(m)
+                    new_m['get']['responses']['200']['schema']['items']['type'] = 'object'
+                    new_m['get']['responses']['200']['schema']['items']['properties'] = props
+                    new_m['get']['responses']['200']['schema']['example'] = []
+                    new_m['get']['operationId'] = new_m['get']['operationId'] + item
+                    for p in props:
+                        if p.endswith("ActionTaskRecord"):
+                            if "methods" in self.halo.settings['mservices'][self.service]['record']:
+                                for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
+                                    if mthd == new_m['get']['operationId']:
+                                        self.halo.cli.log("bq:" + new_m['get']['operationId'])
+                                        props[p]['properties']["ObjectReference"] = {"type":"string"}
+                                        for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
+                                            type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][fld]
+                                            props[p]['properties'][fld] = {"type": type}
+                    params = new_m['get']['parameters']
+                    for p in params:
+                        if p['name'] == "behavior-qualifier":
+                            params.remove(p)
+                    new_m['get']['parameters'] = params
+                    new_m['get']['summary'] = new_m['get']['summary'].replace("Reference Ids", 'Instances')
+                    if 'description' in new_m['get']:
+                        new_m['get']['description'] = new_m['get']['description'].replace("Reference Ids", 'Instances')
+                    data['paths'][key] = new_m
+            else:  # cr methods
+                ref_key = k + "/{cr-reference-id}"
+                ref_m = data['paths'][ref_key]
+                new_m = copy.deepcopy(ref_m)
+                props = new_m['get']['responses']['200']['schema']['properties']
+                key = k + "/extend"
+                m = tmp[k]
+                m['get']['responses']['200']['schema']['items']['type'] = 'object'
+                m['get']['responses']['200']['schema']['items']['properties'] = props
+                m['get']['responses']['200']['schema']['example'] = []
+                for p in props:
+                    if p.endswith("ActionTaskRecord"):
+                        if "methods" in self.halo.settings['mservices'][self.service]['record']:
+                            for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
+                                if mthd == str(m['get']['operationId']):
+                                    self.halo.cli.log("cr:" + m['get']['operationId'])
+                                    props[p]['properties']["ObjectReference"] = {"type":"string"}
+                                    for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
+                                        type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][fld]
+                                        props[p]['properties'][fld] = {"type":type}
+                m['get']['summary'] = m['get']['summary'].replace("Ids", 'Instances')
+                if 'description' in m['get']:
+                    m['get']['description'] = m['get']['description'].replace("Ids", 'Instances')
+                data['paths'][key] = m
 
         self.halo.cli.log("finished extend seccessfuly")
 

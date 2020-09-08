@@ -8,6 +8,7 @@
 			"type": "south",
 			"urls": ".\\bian_swgr\\current-account.json",
 			"record": {
+				"path": ".\\post_cqrs1.json",
 				"name":"Current Account",
 				"id":"137",
 				"methods": {
@@ -64,10 +65,128 @@
 					},
 					"RetrieveCurrentAccountBehaviorQualifierReferenceIdsExtendDepositsandWithdrawals": {
 						"added_fields": {
-							"name1": "string",
-							"name2": "number",
-							"name3": "string",
-							"name4": "number"
+							"depositsAndWithdrawalsRetrieveActionTaskRecord": {
+								"name1": "string",
+								"name2": "number",
+								"name3": "string",
+								"name4": "number"
+							}
+						},
+						"field_mappings": {
+							"trx_tag1": {
+								"mapping1": {
+									"from": [
+										{
+											"field1": "string"
+										}
+									],
+									"to": {
+										"field2": "string"
+									},
+									"instructions": "javascript code"
+								}
+							}
+						},
+						"collection-filter": [
+							{"field": "f1","type": "string"},{"field": "f2","type": "number"}
+						],
+						"refactor": [
+							{"field": "abc.def.xyz","type": "string"}
+						],
+						"headers": {
+							"request": {
+
+							},
+							"response": {
+
+							}
+						},
+						"errors": {
+							"400": {
+
+							},
+							"500": {
+
+							}
+						},
+						"version": "0.1"
+					}
+				},
+				"sbq": [
+					{"base_method": "abc","name": "sub","values": ["abc","def"]}
+				],
+				"endpoints": [
+					{"base_method": "abc","name": "tst"}
+				]
+			}
+		},
+		"halo_credit_account": {
+			"type": "south",
+			"urls": ".\\bian_swgr\\credit charge card.json",
+			"record": {
+				"path": ".\\post_cqrs2.json",
+				"name":"Current Account",
+				"id":"137",
+				"methods": {
+					"RetrieveCreditChargeCardReferenceIdsExtend": {
+						"added_fields": {
+							"creditChargeCardFulfilmentArrangementRetrieveActionTaskRecord": {
+								"name1": "string",
+								"name2": "number",
+								"name3": "string",
+								"name4": "number"
+							},
+							"currentAccountFulfillmentArrangementInstanceRecord.datearray": {
+
+							}
+						},
+						"field_mappings": {
+							"trx_tag1": {
+								"mapping1": {
+									"from": [
+										{
+											"field1": "string"
+										}
+									],
+									"to": {
+										"field2": "string"
+									},
+									"instructions": "javascript code"
+								}
+							}
+						},
+						"collection-filter": [
+							{"field": "f1","type": "string"},{"field": "f2","type": "number"}
+						],
+						"refactor": [
+							{"field": "abc.def.xyz","type": "string"}
+						],
+						"headers": {
+							"request": {
+
+							},
+							"response": {
+
+							}
+						},
+						"errors": {
+							"400": {
+
+							},
+							"500": {
+
+							}
+						},
+						"version": "0.1"
+					},
+					"RetrieveCreditChargeCardBehaviorQualifierReferenceIdsExtendCardTransaction": {
+						"added_fields": {
+							"cardTransactionRetrieveActionTaskRecord": {
+								"name1": "string",
+								"name2": "number",
+								"name3": "string",
+								"name4": "number"
+							}
 						},
 						"field_mappings": {
 							"trx_tag1": {
