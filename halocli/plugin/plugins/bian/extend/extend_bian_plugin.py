@@ -197,7 +197,8 @@ class Plugin():
         self.data = Util.analyze_swagger(urls)
 
     def before_fields_generate(self):
-        self.data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + self.data["info"]["title"]
+        if "company" in self.halo.settings['mservices'][self.service]['record']:
+            self.data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + self.data["info"]["title"]
 
 
 
