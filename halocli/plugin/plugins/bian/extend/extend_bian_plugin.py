@@ -53,11 +53,97 @@ class Plugin():
 
         # set commands
         self.commands = {
-            'testy': {
-                'usage': "test this for your HALO project",
-                'lifecycleEvents': ['resources', 'functions']
+            'all': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
             },
-            'method1': {
+            'fields': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'mappings': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'filter': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'refactor': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'headers': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'errors': {
                 'usage': "do this for your HALO project",
                 'lifecycleEvents': ['generate', 'write'],
                 'options': {
@@ -76,10 +162,14 @@ class Plugin():
 
         # set hooks
         self.hooks = {
-            'before:method1:generate': self.before_method_generate,
-            'method1:generate': self.method_generate,
-            'after:method1:generate': self.after_method_generate,
-            'method1:write': self.method_write,
+            'before:fields:generate': self.before_fields_generate,
+            'fields:generate': self.fields_generate,
+            'after:fields:generate': self.after_fields_generate,
+            'fields:write': self.fields_write,
+            'before:refactor:generate': self.before_refactor_generate,
+            'refactor:generate': self.refactor_generate,
+            'after:refactor:generate': self.after_refactor_generate,
+            'refactor:write': self.refactor_write,
         }
 
         #logger.info('finished plugin')
@@ -87,8 +177,9 @@ class Plugin():
     def run_plugin(self,options):
         self.options = options
         #do more
+        self.before()
 
-    def before_method_generate(self):
+    def before(self):
         service = None
         path = None
         if hasattr(self, 'options'):
@@ -105,26 +196,17 @@ class Plugin():
         self.path = path
         self.data = Util.analyze_swagger(urls)
 
+    def before_fields_generate(self):
+        self.data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + self.data["info"]["title"]
 
-    def method_generate(self):
+
+
+    def fields_generate(self):
         data = self.data
         tmp = {}
-        bqs = []
         for d in data['paths']:
-            # {'get': {
-            # 'tags': ['retrieve'],
-            # 'summary': 'Analytical views maintained by the SDCurrentAccount service center for management reporting and analysis purposes',
-            # 'description': 'Analytical views maintained by the SDCurrentAccount service center for management reporting and analysis purposes',
-            # 'operationId': 'retrieveSDCurrentAccount',
-            # 'produces': ['application/json'],
-            # 'parameters': [{'name': 'sd-reference-id', 'in': 'path', 'description': 'SDCurrentAccount Servicing Session Reference', 'required': True, 'type': 'string'}, {'name': 'queryparams', 'in': 'query', 'description': "Query params from schema '#/definitions/SDCurrentAccountRetrieveInputModel'", 'required': False, 'type': 'string'}],
-            # 'responses': {'200': {'description': 'Successful Service Retrieve', 'schema': {'type': 'object', 'properties': {'serviceDomainRetrieveActionTaskReference': {'type': 'string', 'example': 'SRATR795161', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::ISO20022andUNCEFACT::Identifier\n general-info: Reference to a retrieve service call\n'}, 'serviceDomainRetrieveActionTaskRecord': {'type': 'object', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Binary\n general-info: The retrieve service call consolidated processing record\n', 'properties': {}}, 'serviceDomainRetrieveActionResponse': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Details of the retrieve action service response (lists returned reports)\n'}, 'serviceDomainRetrieveActionRecord': {'properties': {'serviceDomainActivityAnalysis': {'properties': {'activityAnalysisReference': {'type': 'string', 'example': '730230', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::ISO20022andUNCEFACT::Identifier\n general-info: Reference to the internal activity analysis view maintained by the service center\n'}, 'activityAnalysisResult': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: The results of the activity analysis that can be on-going, periodic and actual and projected\n'}, 'activityAnalysisReportType': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Code\n general-info: The type of activity analysis report available\n'}, 'activityAnalysisReport': {'type': 'object', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Binary\n general-info: The activity analysis report in any suitable form including selection filters where appropriate\n', 'properties': {}}}}, 'serviceDomainPerformanceAnalysis': {'properties': {'performanceAnalysisReference': {'type': 'string', 'example': '761670', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::ISO20022andUNCEFACT::Identifier\n general-info: Reference to the internal performance analysis view maintained by the service center\n'}, 'performanceAnalysisResult': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: The results of the performance analysis that can be on-going or periodic\n'}, 'performanceAnalysisReportType': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Code\n general-info: The type of performance analysis report available\n'}, 'performanceAnalysisReport': {'type': 'object', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Binary\n general-info: The performance analysis report in any suitable form including selection filters where appropriate\n', 'properties': {}}}}, 'controlRecordPortfolioAnalysis': {'properties': {'controlRecordPortfolioAnalysisReference': {'type': 'string', 'example': '739764', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::ISO20022andUNCEFACT::Identifier\n general-info: Reference to the control record portfolio analysis view maintained by the service center\n'}, 'controlRecordPortfolioAnalysisResult': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: The results of the portfolio analysis that can be on-going, periodic and actual and projected (can be unstructured data)\n'}, 'controlRecordPortfolioAnalysisReportType': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Code\n general-info: The type of external portfolio analysis report available\n'}, 'controlRecordAnalysisReport': {'type': 'object', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Binary\n general-info: The external analysis report in any suitable form including selection filters where appropriate\n', 'properties': {}}}}}}, 'serviceDomainOfferedService': {'properties': {'serviceDomainServiceReference': {'type': 'string', 'example': '776158', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::ISO20022andUNCEFACT::Identifier\n general-info: Reference to a service offered by the service center\n'}, 'serviceDomainServiceRecord': {'properties': {'serviceDomainServiceType': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Refers to the different types of services offered\n'}, 'serviceDomainServiceVersion': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: The version details of the service when appropriate\n'}, 'serviceDomainServiceDescription': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Description of the offered service \n'}, 'serviceDomainServicePoliciesandGuidelines': {'properties': {'serviceDomainServiceEligibility': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Policies and rules governing access to the offered service, includes eligibility and qualifications\n'}, 'serviceDomainServiceIntendedUses': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Guidelines covering allowed, intended use of the service\n'}, 'serviceDomainServicePricingandTerms': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Terms, prices, penalties associated with use of the service\n'}}}, 'serviceDomainServiceSchedule': {'type': 'string', 'description': '`status: Not Mapped`\n core-data-type-reference: BIAN::DataTypesLibrary::CoreDataTypes::UNCEFACT::Text\n general-info: Schedule defining when the accessed service is available\n'}}}}}}}}}}}
             m = data['paths'][d]
             if 'get' in m:
-                # /current-account/{sd-reference-id}/current-account-fulfillment-arrangement/{cr-reference-id}/interest/{bq-reference-id}/
-                if d.endswith("/behavior-qualifiers/"):
-                    logger.debug("bqs:" + str(m))
-                    bqs = m['get']['responses']['200']['schema']['example']
                 if 'ReferenceIdsExtend' in m['get']['operationId']:
                     new_m = copy.deepcopy(m)
                     tmp[d] = new_m
@@ -147,14 +229,14 @@ class Plugin():
                                         props[p]['properties'][fld] = {"type": type}
             data['paths'][k] = new_m
 
-
-        self.halo.cli.log("finished extend seccessfuly")
-
-    def after_method_generate(self):
+    def after_fields_generate(self):
         data = self.data
         Util.validate_swagger(data)
 
-    def method_write(self):
+    def fields_write(self):
+        self.file_write()
+
+    def file_write(self):
         try:
             path = self.path
             if path:
@@ -179,5 +261,45 @@ class Plugin():
             raise HaloPluginException(str(e))
 
 
+    def before_refactor_generate(self):
+        self.before()
 
+    def refactor_generate(self):
+        data = self.data
+        tmp = {}
+        for d in data['paths']:
+            m = data['paths'][d]
+            if 'get' in m:
+                if 'ReferenceIdsExtend' in m['get']['operationId']:
+                    new_m = copy.deepcopy(m)
+                    tmp[d] = new_m
+        # fix the response and add
+        for k in tmp:
+            # bq methods
+            ref_m = tmp[k]
+            new_m = copy.deepcopy(ref_m)
+            props = new_m['get']['responses']['200']['schema']['items']['properties']
+            for p in props:
+                if "methods" in self.halo.settings['mservices'][self.service]['record']:
+                    for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
+                        if mthd == new_m['get']['operationId']:
+                            for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
+                                fields = target['field'].split(".")
+                                if p.endswith(fields[0]):
+                                    #self.halo.cli.log(new_m['get']['operationId']+":"+p)
+                                    size = len(fields)
+                                    i = 1
+                                    props = props[p]
+                                    while i < size:
+                                        name = fields[i]
+                                        props = props['properties'][name]
+                                        i = i + 1
+                                    type = target['type']
+                                    props['type'] = type
+            data['paths'][k] = new_m
 
+    def after_refactor_generate(self):
+        pass
+
+    def refactor_write(self):
+        self.file_write()

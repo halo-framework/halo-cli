@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # twine upload dist/halo-cli-0.1.tar.gz -r pypi
 setup(
     name='halo-cli',
-    version='0.2',
+    version='0.21',
     #py_modules=['bob'],
     packages=find_packages(),
     include_package_data=True,

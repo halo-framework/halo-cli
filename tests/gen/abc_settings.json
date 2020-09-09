@@ -8,6 +8,7 @@
 			"type": "south",
 			"urls": ".\\bian_swgr\\current-account.json",
 			"record": {
+				"company": "ABC BANK",
 				"path": ".\\post_cqrs1.json",
 				"name":"Current Account",
 				"id":"137",
@@ -159,7 +160,7 @@
 							{"field": "f1","type": "string"},{"field": "f2","type": "number"}
 						],
 						"refactor": [
-							{"field": "abc.def.xyz","type": "string"}
+							{"field": "cardTransactionInstanceRecord.cardTransaction.cardTransactionAmount","type": "double"}
 						],
 						"headers": {
 							"request": {
@@ -207,7 +208,7 @@
 							{"field": "f1","type": "string"},{"field": "f2","type": "number"}
 						],
 						"refactor": [
-							{"field": "abc.def.xyz","type": "string"}
+							{"field": "cardTransactionInstanceRecord.cardTransaction.cardTransactionAmount","type": "double"}
 						],
 						"headers": {
 							"request": {
