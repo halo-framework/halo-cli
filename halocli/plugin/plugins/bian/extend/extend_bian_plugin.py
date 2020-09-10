@@ -290,13 +290,13 @@ class Plugin():
                                     #self.halo.cli.log(new_m['get']['operationId']+":"+p)
                                     size = len(fields)
                                     i = 1
-                                    props = props[p]
+                                    propsx = props[p]
                                     while i < size:
                                         name = fields[i]
-                                        props = props['properties'][name]
+                                        propsx = propsx['properties'][name]
                                         i = i + 1
                                     type = target['type']
-                                    props['type'] = type
+                                    propsx['type'] = type
             data['paths'][k] = new_m
 
     def after_refactor_generate(self):
