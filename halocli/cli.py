@@ -238,6 +238,7 @@ class Builder:
 
     def do_plugins(self,settings):
         self.plugins = [
+            #"halocli.plugin.plugins.bian.extend.test_bian_plugin.Plugin",
             "halocli.plugin.plugins.bian.extend.extend_bian_plugin.Plugin",
             "halocli.plugin.plugins.bian.segregate.cqrs_bian_plugin.Plugin",
             "halocli.plugin.plugins.create.create_plugin.Plugin",

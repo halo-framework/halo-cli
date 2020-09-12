@@ -53,8 +53,8 @@ class Plugin():
 
         # set commands
         self.commands = {
-            'swagger': {
-                'usage': "Create an extended swagger file",
+            'all': {
+                'usage': "do this for your HALO project",
                 'lifecycleEvents': ['generate', 'write'],
                 'options': {
                     'service': {
@@ -62,29 +62,24 @@ class Plugin():
                         'shortcut': 's'
                     },
                     'path': {
-                        'usage': 'Path of the swagger file dir',
+                        'usage': 'Path of the swagger file',
                         'shortcut': 'p',
                         'required': True
+                    }
+                },
+            },
+            'fields': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
                     },
-                    'fields': {
-                        'usage': 'add fields',
-                        'shortcut': 'f'
-                    },
-                    'refactor': {
-                        'usage': 'refactor existing fields',
-                        'shortcut': 'r'
-                    },
-                    'headers': {
-                        'usage': 'add headers',
-                        'shortcut': 'h'
-                    },
-                    'errors': {
-                        'usage': 'add errors',
-                        'shortcut': 'e'
-                    },
-                    'all': {
-                        'usage': 'run all options',
-                        'shortcut': 'a'
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
                     }
                 },
             },
@@ -118,18 +113,63 @@ class Plugin():
                     }
                 },
             },
+            'refactor': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'headers': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
+            'errors': {
+                'usage': "do this for your HALO project",
+                'lifecycleEvents': ['generate', 'write'],
+                'options': {
+                    'service': {
+                        'usage': 'Name of the service',
+                        'shortcut': 's'
+                    },
+                    'path': {
+                        'usage': 'Path of the swagger file',
+                        'shortcut': 'p',
+                        'required': True
+                    }
+                },
+            },
         }
 
         # set hooks
         self.hooks = {
-            'before:swagger:generate': self.before_swagger_generate,
-            'swagger:generate': self.swagger_generate,
-            'after:swagger:generate': self.after_swagger_generate,
-            'swagger:write': self.swagger_write,
-            'mapping:generate': self.mapping_generate,
-            'mapping:write': self.mapping_write,
-            'filter:generate': self.filter_generate,
-            'filter:write': self.filter_write,
+            'before:fields:generate': self.before_fields_generate,
+            'fields:generate': self.fields_generate,
+            'after:fields:generate': self.after_fields_generate,
+            'fields:write': self.fields_write,
+            'before:refactor:generate': self.before_refactor_generate,
+            'refactor:generate': self.refactor_generate,
+            'after:refactor:generate': self.after_refactor_generate,
+            'refactor:write': self.refactor_write,
         }
 
         #logger.info('finished plugin')
@@ -137,40 +177,32 @@ class Plugin():
     def run_plugin(self,options):
         self.options = options
         #do more
+        self.before()
 
-    def before_swagger_generate(self):
+    def before(self):
         service = None
         path = None
         if hasattr(self, 'options'):
             if self.options:
                 for o in self.options:
                     if 'service' in o:
-                        self.service = o['service']
+                        service = o['service']
                     if 'path' in o:
-                        self.path = o['path']
-                    if 'all' in o:
-                        self.all = o['all']
-                    if 'fields' in o:
-                        self.fields = o['fields']
-                    if 'refactor' in o:
-                        self.refactor = o['refactor']
-                    if 'headers' in o:
-                        self.headers = o['headers']
-                    if 'errors' in o:
-                        self.errors = o['errors']
+                        path = o['path']
         if not service:
             raise Exception("no service found")
         self.service = service
         urls = self.halo.settings['mservices'][service]['record']['path']
+        self.path = path
         self.data = Util.analyze_swagger(urls)
 
-    def before_swagger_generate(self):
+    def before_fields_generate(self):
         if "company" in self.halo.settings['mservices'][self.service]['record']:
             self.data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + self.data["info"]["title"]
 
 
 
-    def swagger_generate(self):
+    def fields_generate(self):
         data = self.data
         tmp = {}
         for d in data['paths']:
@@ -198,11 +230,11 @@ class Plugin():
                                         props[p]['properties'][fld] = {"type": type}
             data['paths'][k] = new_m
 
-    def after_swagger_generate(self):
+    def after_fields_generate(self):
         data = self.data
         Util.validate_swagger(data)
 
-    def swagger_write(self):
+    def fields_write(self):
         self.file_write()
 
     def file_write(self):
@@ -228,6 +260,10 @@ class Plugin():
             return 0
         except Exception as e:
             raise HaloPluginException(str(e))
+
+
+    def before_refactor_generate(self):
+        self.before()
 
     def refactor_generate(self):
         data = self.data
@@ -268,15 +304,3 @@ class Plugin():
 
     def refactor_write(self):
         self.file_write()
-
-    def mapping_generate(self):
-        pass
-
-    def mapping_write(self):
-        pass
-
-    def filter_generate(self):
-        pass
-
-    def filter_write(self):
-        pass

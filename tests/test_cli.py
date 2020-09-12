@@ -19,7 +19,7 @@ class TestUtil(TestCase):
     def test_cli_base1(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["--debug","tester"])
+        result = self.runner.invoke(cli, ["--debug","info"])
         print('r='+str(result.output))
         expected_output_log = 'Debug mode is on'
         assert result.exit_code == 0
@@ -28,7 +28,7 @@ class TestUtil(TestCase):
     def test_cli_base2(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["-v","tester"])
+        result = self.runner.invoke(cli, ["-v","info"])
         print('r='+str(result.output))
         expected_output_log = 'Click Version'
         assert result.exit_code == 0
@@ -37,25 +37,25 @@ class TestUtil(TestCase):
     def test_cli_base3(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["-a","tester"])
+        result = self.runner.invoke(cli, ["-a","info"])
         print('r='+str(result))
-        expected_output_log = 'Usage: cli tester [OPTIONS] COMMAND [ARGS]...'
+        expected_output_log = 'Usage: cli info [OPTIONS] COMMAND [ARGS]...'
         assert result.exit_code == 0
         assert result.output.startswith(expected_output_log)
 
     def test_cli_base4(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["-s","tester"])
+        result = self.runner.invoke(cli, ["-s","info"])
         print('r='+str(result))
-        expected_output_log = 'Usage: cli tester [OPTIONS] COMMAND [ARGS]...'
+        expected_output_log = 'Usage: cli info [OPTIONS] COMMAND [ARGS]...'
         assert result.exit_code == 2
         #assert result.output.startswith(expected_output_log)
 
     def test_cli_base41(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["-s",".\\abc.json","tester"])
+        result = self.runner.invoke(cli, ["-s",".\\abc.json","info"])
         print('r='+str(result.output))
         expected_output_log = 'settings file'
         assert result.exit_code == 0
@@ -64,16 +64,16 @@ class TestUtil(TestCase):
     def test_cli_base5(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["-q","tester"])
+        result = self.runner.invoke(cli, ["-q","info"])
         print('r='+str(result))
-        expected_output_log = 'Usage: cli tester [OPTIONS] COMMAND [ARGS]...'
+        expected_output_log = 'Usage: cli info [OPTIONS] COMMAND [ARGS]...'
         assert result.exit_code == 0
         assert result.output.startswith(expected_output_log)
 
     def test_cli_base6(self):
         print('test_cli_base')
         #start(False)
-        result = self.runner.invoke(cli, ["-r","tester"])
+        result = self.runner.invoke(cli, ["-r","info"])
         print('r='+str(result.output))
         expected_output_log = 'Verbosity: True'
         assert result.exit_code == 0
