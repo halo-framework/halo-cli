@@ -1,6 +1,7 @@
 {
 	"cli": "0.2.2",
 	"swagger": "2.0",
+	"bian_api": "2.0",
 	"application_name": "bian_service_domains",
 	"plugins":[
 
