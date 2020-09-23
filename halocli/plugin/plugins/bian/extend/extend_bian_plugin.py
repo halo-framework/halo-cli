@@ -21,7 +21,7 @@ logging.root.setLevel(logging.INFO)
 the bian plugin
 ---------------
 
-1. no segregation and add id for no segregation items - done
+1. extend bian swagger files
 
 2. add proprietary bank fields from legacy - done
 
@@ -59,7 +59,8 @@ class Plugin():
                 'options': {
                     'service': {
                         'usage': 'Name of the service',
-                        'shortcut': 's'
+                        'shortcut': 's',
+                        'required': True
                     },
                     'path': {
                         'usage': 'Path of the swagger file dir',

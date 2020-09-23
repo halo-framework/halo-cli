@@ -21,21 +21,9 @@ logging.root.setLevel(logging.INFO)
 the bian plugin
 ---------------
 
-1. no segregation and add id for no segregation items - done
+1. extend with no segregation endpoints
 
-2. add proprietary bank fields from legacy - done
-
-3. add mappings from legacy to bian fields
-
-4. generate collection-filter parameter list
-
-5. add sub BQ as needed
-
-6. add new endpoints as needed
-
-7. refactor bian types in specific fields where type is generic(string, etc..)
-
-8. add version metadata for control and traceability
+2. add id for no segregation items
 
 """
 
@@ -59,12 +47,17 @@ class Plugin():
                 'options': {
                     'service': {
                         'usage': 'Name of the service',
-                        'shortcut': 's'
+                        'shortcut': 's',
+                        'required': True
                     },
                     'path': {
                         'usage': 'Path of the swagger file',
                         'shortcut': 'p',
                         'required': True
+                    },
+                    'id': {
+                        'usage': 'add reference id to items',
+                        'shortcut': 'i'
                     }
                 },
             },
@@ -83,22 +76,19 @@ class Plugin():
     def run_plugin(self,options):
         self.options = options
         #do more
+        self.id = None
+        for o in self.options:
+            if 'service' in o:
+                self.service = o['service']
+            if 'path' in o:
+                self.path = o['path']
+            if 'id' in o:
+                self.id = o['id']
 
     def before_method_generate(self):
-        service = None
-        path = None
-        if hasattr(self, 'options'):
-            if self.options:
-                for o in self.options:
-                    if 'service' in o:
-                        service = o['service']
-                    if 'path' in o:
-                        path = o['path']
-        if not service:
-            raise Exception("no service found")
-        self.service = service
-        urls = self.halo.settings['mservices'][service]['urls']
-        self.path = path
+        if self.service not in self.halo.settings['mservices']:
+            raise HaloPluginException("service not found in swagger : "+self.service)
+        urls = self.halo.settings['mservices'][self.service]['urls']
         self.data = Util.analyze_swagger(urls)
 
 
@@ -149,6 +139,10 @@ class Plugin():
                     new_m['get']['responses']['200']['schema']['items']['properties'] = props
                     new_m['get']['responses']['200']['schema']['example'] = []
                     new_m['get']['operationId'] = new_m['get']['operationId'] + item
+                    if self.id:
+                        for p in props:
+                            if p.endswith(self.id):
+                                props[p]['properties']["ObjectReference"] = {"type": "string"}
                     params = new_m['get']['parameters']
                     for p in params:
                         if p['name'] == "behavior-qualifier":
@@ -171,6 +165,10 @@ class Plugin():
                 m['get']['summary'] = m['get']['summary'].replace("Ids", 'Instances')
                 if 'description' in m['get']:
                     m['get']['description'] = m['get']['description'].replace("Ids", 'Instances')
+                if self.id:
+                    for p in props:
+                        if p.endswith(self.id):
+                            props[p]['properties']["ObjectReference"] = {"type": "string"}
                 data['paths'][key] = m
 
         self.halo.cli.log("finished extend seccessfuly")
