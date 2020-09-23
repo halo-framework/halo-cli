@@ -101,8 +101,8 @@ def logy(argsx):
     args = Args()
     print()
     with indent(4, quote='>>>'):
-        puts(coloredx.blue('Command Aruments: ') + str(argsx))
-        puts(coloredx.blue('Aruments passed in: ') + str(args.all))
+        puts(coloredx.blue('Command Arguments: ') + str(argsx))
+        puts(coloredx.blue('Arguments passed in: ') + str(args.all))
         puts(coloredx.blue('Flags detected: ') + str(args.flags))
         puts(coloredx.blue('Files detected: ') + str(args.files))
         puts(coloredx.blue('NOT Files detected: ') + str(args.not_files))
