@@ -10,6 +10,7 @@ import pkgutil
 #app
 import click
 import six
+from pprint import pprint
 from rich.console import Console
 from rich.table import Column, Table
 from PyInquirer import (Token, ValidationError, Validator, print_json, prompt,
@@ -93,6 +94,29 @@ def edit(msg):
 
 def prompt_cli(msg, args):
     return click.prompt(msg,args)
+
+def prompt_confirm():
+    questions = [
+        {
+            'type': 'confirm',
+            'message': 'Do you want to continue?',
+            'name': 'continue',
+            'default': True,
+        },
+        {
+            'type': 'confirm',
+            'message': 'Do you want to exit?',
+            'name': 'exit',
+            'default': False,
+        },
+    ]
+
+    answers = prompt.prompt(questions, style=None)
+    pprint(answers)
+    for item in answers:
+        if item == 'continue':
+            if not answers[item]:
+                raise CliException(" not confirmed")
 
 def start(run=None):
     global builder
