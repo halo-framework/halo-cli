@@ -46,6 +46,16 @@ verbose_clr = "yellow"
 debug_clr = "blue"
 verbose_clr = "green"
 
+inquirer_style = style_from_dict({
+    Token.Separator: '#cc5454',
+    Token.QuestionMark: '#673ab7 bold',
+    Token.Selected: '#cc5454',  # default
+    Token.Pointer: '#673ab7 bold',
+    Token.Instruction: '',  # default
+    Token.Answer: '#f44336 bold',
+    Token.Question: '',
+})
+
 
 discovered_plugins = {
     name: importlib.import_module(name)
@@ -75,7 +85,7 @@ def logx(plugins):
             table.add_row(plugin, str(plugin_length))
     console.print(table)
 
-def logy(args):
+def logy1(args):
     table = Table(show_header=True, header_style="bold magenta")
     table.add_column("option")
     table.add_column("value", style="dim", width=60)
@@ -84,6 +94,21 @@ def logy(args):
             key = list(arg.keys())[0]
             table.add_row(key, str(arg[key]))
     console.print(table)
+
+def logy(argsx):
+    from clint.arguments import Args
+    from clint.textui import puts, colored as coloredx, indent
+    args = Args()
+    print()
+    with indent(4, quote='>>>'):
+        puts(coloredx.blue('Command Aruments: ') + str(argsx))
+        puts(coloredx.blue('Aruments passed in: ') + str(args.all))
+        puts(coloredx.blue('Flags detected: ') + str(args.flags))
+        puts(coloredx.blue('Files detected: ') + str(args.files))
+        puts(coloredx.blue('NOT Files detected: ') + str(args.not_files))
+        puts(coloredx.blue('Grouped Arguments: ') + str(dict(args.grouped)))
+
+    print()
 
 def more(log_string):
     click.echo_via_pager(log_string)
@@ -111,7 +136,7 @@ def prompt_confirm():
         },
     ]
 
-    answers = prompt.prompt(questions, style=None)
+    answers = prompt.prompt(questions, style=inquirer_style)
     pprint(answers)
     for item in answers:
         if item == 'continue':
@@ -153,7 +178,6 @@ def start(run=None):
     if run != False:
         return cli(auto_envvar_prefix='HALO')
     return builder
-
 
 @click.group()
 @click.option('--debug/--no-debug', default=False)
