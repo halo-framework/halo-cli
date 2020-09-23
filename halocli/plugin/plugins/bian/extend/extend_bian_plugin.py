@@ -137,38 +137,30 @@ class Plugin():
     def run_plugin(self,options):
         self.options = options
         #do more
+        if self.options:
+            for o in self.options:
+                if 'service' in o:
+                    self.service = o['service']
+                if 'path' in o:
+                    self.path = o['path']
+                if 'all' in o:
+                    self.all = o['all']
+                if 'fields' in o:
+                    self.fields = o['fields']
+                if 'refactor' in o:
+                    self.refactor = o['refactor']
+                if 'headers' in o:
+                    self.headers = o['headers']
+                if 'errors' in o:
+                    self.errors = o['errors']
 
     def before_swagger_generate(self):
-        service = None
-        path = None
-        if hasattr(self, 'options'):
-            if self.options:
-                for o in self.options:
-                    if 'service' in o:
-                        self.service = o['service']
-                    if 'path' in o:
-                        self.path = o['path']
-                    if 'all' in o:
-                        self.all = o['all']
-                    if 'fields' in o:
-                        self.fields = o['fields']
-                    if 'refactor' in o:
-                        self.refactor = o['refactor']
-                    if 'headers' in o:
-                        self.headers = o['headers']
-                    if 'errors' in o:
-                        self.errors = o['errors']
-        if not service:
+        if not self.service:
             raise Exception("no service found")
-        self.service = service
-        urls = self.halo.settings['mservices'][service]['record']['path']
+        urls = self.halo.settings['mservices'][self.service]['record']['path']
         self.data = Util.analyze_swagger(urls)
-
-    def before_swagger_generate(self):
         if "company" in self.halo.settings['mservices'][self.service]['record']:
             self.data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + self.data["info"]["title"]
-
-
 
     def swagger_generate(self):
         data = self.data
@@ -195,7 +187,7 @@ class Plugin():
                                     #props[p]['properties']["ObjectReference"] = {"type":"string"}
                                     for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
                                         type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
-                                        props[p]['properties'][fld] = {"type": type}
+                                        props[p][fld] = {"type": type}
             data['paths'][k] = new_m
 
     def after_swagger_generate(self):

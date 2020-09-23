@@ -91,6 +91,7 @@ class PluginMngr():
                     #self.add(event,diff)
                 logger.debug('finished plugin '+str(plugin))
                 if ctx.obj.debug:
+                    self.halo.logy(args)
                     self.halo.logx(self.counter)
             return True
         return False

@@ -74,6 +74,16 @@ def logx(plugins):
             table.add_row(plugin, str(plugin_length))
     console.print(table)
 
+def logy(args):
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("option")
+    table.add_column("value", style="dim", width=60)
+    with click.progressbar(args) as click_plugins:
+        for arg in args:
+            key = list(arg.keys())[0]
+            table.add_row(key, str(arg[key]))
+    console.print(table)
+
 def more(log_string):
     click.echo_via_pager(log_string)
 
@@ -194,6 +204,9 @@ class Builder:
 
     def logx(self,dict_run):
         logx(dict_run)
+
+    def logy(self,args):
+        logy(args)
 
     def get_plugins(self):
         halo_settings_path = None
