@@ -187,7 +187,7 @@ class Plugin():
                                     #props[p]['properties']["ObjectReference"] = {"type":"string"}
                                     for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
                                         type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
-                                        props[p][fld] = {"type": type}
+                                        props[p][fld] = type
             data['paths'][k] = new_m
 
     def after_swagger_generate(self):
