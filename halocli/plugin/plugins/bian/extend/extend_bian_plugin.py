@@ -138,24 +138,24 @@ class Plugin():
     def run_plugin(self,options):
         self.options = options
         #do more
-        if self.options:
-            for o in self.options:
-                if 'service' in o:
-                    self.service = o['service']
-                if 'path' in o:
-                    self.path = o['path']
-                if 'all' in o:
-                    self.all = o['all']
-                if 'fields' in o:
-                    self.fields = o['fields']
-                if 'refactor' in o:
-                    self.refactor = o['refactor']
-                if 'headers' in o:
-                    self.headers = o['headers']
-                if 'errors' in o:
-                    self.errors = o['errors']
+
 
     def before_swagger_generate(self):
+        for o in self.options:
+            if 'service' in o:
+                self.service = o['service']
+            if 'path' in o:
+                self.path = o['path']
+            if 'all' in o:
+                self.all = o['all']
+            if 'fields' in o:
+                self.fields = o['fields']
+            if 'refactor' in o:
+                self.refactor = o['refactor']
+            if 'headers' in o:
+                self.headers = o['headers']
+            if 'errors' in o:
+                self.errors = o['errors']
         if not self.service:
             raise Exception("no service found")
         urls = self.halo.settings['mservices'][self.service]['record']['path']

@@ -76,6 +76,9 @@ class Plugin():
     def run_plugin(self,options):
         self.options = options
         #do more
+
+
+    def before_method_generate(self):
         self.id = None
         for o in self.options:
             if 'service' in o:
@@ -84,8 +87,6 @@ class Plugin():
                 self.path = o['path']
             if 'id' in o:
                 self.id = o['id']
-
-    def before_method_generate(self):
         if self.service not in self.halo.settings['mservices']:
             raise HaloPluginException("service not found in swagger : "+self.service)
         urls = self.halo.settings['mservices'][self.service]['urls']
