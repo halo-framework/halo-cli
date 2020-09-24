@@ -90,7 +90,7 @@ class PluginMngr():
                     diff = datetime.datetime.now() - start_date
                     #self.add(event,diff)
                 logger.debug('finished plugin '+str(plugin))
-                if ctx.obj.debug:
+                if ctx.obj.debug or ctx.obj.verbose:
                     self.halo.logy(args)
                     self.halo.logx(self.counter)
             return True

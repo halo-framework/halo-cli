@@ -85,16 +85,6 @@ def logx(plugins):
             table.add_row(plugin, str(plugin_length))
     console.print(table)
 
-def logy1(args):
-    table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("option")
-    table.add_column("value", style="dim", width=60)
-    with click.progressbar(args) as click_plugins:
-        for arg in args:
-            key = list(arg.keys())[0]
-            table.add_row(key, str(arg[key]))
-    console.print(table)
-
 def logy(argsx):
     from clint.arguments import Args
     from clint.textui import puts, colored as coloredx, indent
