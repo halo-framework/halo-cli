@@ -79,6 +79,94 @@ class TestUtil(TestCase):
         assert result.exit_code == 0
         #assert result.output.startswith(expected_output_log)
 
+    def test_util_1(self):
+        print('test_util_1 valid -a')
+        #start(False)
+        from halocli.util import Util
+        expected_output_log = "plugin package: pandas not installed"
+        try:
+            result = Util.check_package_in_env("pandas")
+            print("r=" + str(result))
+        except Exception as e:
+            print("e=" + str(e))
+            assert str(e) == expected_output_log
+
+    def test_util_2(self):
+        print('test_util_1 valid -a')
+        # start(False)
+        from halocli.util import Util
+        result = Util.check_package_in_env("halo-test-plugin")
+        print("r=" + str(result))
+        expected_output = 1
+        assert len(result) == expected_output
+
+    def test_cli_cqrs(self):
+        print('test_cli_cqrs')
+        result = self.runner.invoke(cli, ['cqrs'])
+        print('r='+str(result))
+        expected_output_log = 'Usage: cli cqrs [OPTIONS] COMMAND [ARGS]...'
+        assert result.exit_code == 0
+        print("r="+result.output)
+        assert result.output.startswith(expected_output_log)
+
+    def test_cli_cqrs_test(self):
+        print('test_cli_cqrs test')
+        #start(False)
+        result = self.runner.invoke(cli, ['cqrs','test'])
+        print('r='+str(result))
+        assert result.exit_code == 0
+        print("r="+result.output)
+
+    def test_cli_cqrs_method(self):
+        print('test_cli_cqrs method')
+        #start(False)
+        result = self.runner.invoke(cli, ['cqrs','method'])
+        print('r='+str(result))
+        assert result.exit_code == 2
+        print("r="+result.output)
+
+    def test_cli_cqrs_method_v(self):
+        print('test_cli_validate valid -a')
+        #start(False)
+        result = self.runner.invoke(cli, '-s abc_settings.json cqrs method -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen -i TaskRecord'.split(" "))
+        print('r='+str(result))
+        assert result.exit_code == 2
+        print("r="+result.output)
+
+    def test_cli_extend(self):
+        print('test_cli_extend')
+        #start(False)
+        result = self.runner.invoke(cli, ['extend'])
+        print('r='+str(result))
+        expected_output_log = 'Usage: cli extend [OPTIONS] COMMAND [ARGS]...'
+        assert result.exit_code == 0
+        print("r="+result.output)
+        assert result.output.startswith(expected_output_log)
+
+    def test_cli_extend_test(self):
+        print('test_cli_extend test')
+        #start(False)
+        result = self.runner.invoke(cli, ['extend','test'])
+        print('r='+str(result))
+        assert result.exit_code == 0
+        print("r="+result.output)
+
+    def test_cli_extend_swagger(self):
+        print('test_cli_extend swagger')
+        #start(False)
+        result = self.runner.invoke(cli, ['extend','swagger'])
+        print('r='+str(result))
+        assert result.exit_code == 2
+        print("r="+result.output)
+
+    def test_cli_extend_swagger_v(self):
+        print('test_cli_extend swagger -a')
+        #start(False)
+        result = self.runner.invoke(cli, ['--debug -s abc_settings.json extend swagger -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen -a true'.split(" ")])
+        print('r='+str(result))
+        assert result.exit_code == 2
+        print("r="+result.output)
+
     def test_cli_valid(self):
         print('test_cli_validate')
         #start(False)
@@ -119,23 +207,36 @@ class TestUtil(TestCase):
         print("r="+result.output)
         #assert result.output.startswith(expected_output_log)
 
-    def test_util_1(self):
-        print('test_util_1 valid -a')
+    def test_cli_plugin(self):
+        print('test_cli_plugin')
         #start(False)
-        from halocli.util import Util
-        expected_output_log = "plugin package: pandas not installed"
-        try:
-            result = Util.check_package_in_env("pandas")
-            print("r=" + str(result))
-        except Exception as e:
-            print("e=" + str(e))
-            assert str(e) == expected_output_log
+        result = self.runner.invoke(cli, ['plugin'])
+        print('r='+str(result))
+        expected_output_log = 'Usage: cli plugin [OPTIONS] COMMAND [ARGS]...'
+        assert result.exit_code == 0
+        print("r="+result.output)
+        assert result.output.startswith(expected_output_log)
 
-    def test_util_2(self):
-        print('test_util_1 valid -a')
-        # start(False)
-        from halocli.util import Util
-        result = Util.check_package_in_env("halo-test-plugin")
-        print("r=" + str(result))
-        expected_output = 1
-        assert len(result) == expected_output
+    def test_cli_plugin_test(self):
+        print('test_cli_plugin test')
+        #start(False)
+        result = self.runner.invoke(cli, ['plugin','test'])
+        print('r='+str(result))
+        assert result.exit_code == 0
+        print("r="+result.output)
+
+    def test_cli_plugin_install(self):
+        print('test_cli_plugin install')
+        #start(False)
+        result = self.runner.invoke(cli, ['plugin','install'])
+        print('r='+str(result))
+        assert result.exit_code == 2
+        print("r="+result.output)
+
+    def test_cli_plugin_install_v(self):
+        print('test_cli_plugin valid -a')
+        #start(False)
+        result = self.runner.invoke(cli, ['plugin install -n ./halo-test-plugin'.split(" ")])
+        print('r='+str(result))
+        assert result.exit_code == 2
+        print("r="+result.output)

@@ -133,6 +133,19 @@ def prompt_confirm():
             if not answers[item]:
                 raise CliException(" not confirmed")
 
+"""
+UNIX
+
+0 - success
+
+1 - fail
+----
+If an ClickException is raised, invoke the ClickException.show() method on it to display it and then exit the program with ClickException.exit_code.
+
+If an Abort exception is raised print the string Aborted! to standard error and exit the program with exit code 1.
+
+if it goes through well, exit the program with exit code 0.
+"""
 def start(run=None):
     global builder
     log("HALO CLI", color="blue", figlet=True)
@@ -166,7 +179,13 @@ def start(run=None):
         CLI for running halo commands
     """
     if run != False:
-        return cli(auto_envvar_prefix='HALO')
+        try:
+            return cli(auto_envvar_prefix='HALO')
+        except SystemExit as e:
+            if e.code != 0:
+                log("\nError in HALO CLI Cmd: " + str(e.code), "red")
+            sys.exit(1)
+
     return builder
 
 @click.group()
