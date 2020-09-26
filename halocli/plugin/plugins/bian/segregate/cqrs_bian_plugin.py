@@ -172,7 +172,7 @@ class Plugin():
                             props[p]['properties']["ObjectReference"] = {"type": "string"}
                 data['paths'][key] = m
 
-        self.halo.cli.log("finished extend seccessfuly")
+        self.halo.cli.log("finished cqrs successfully")
 
     def after_method_generate(self):
         data = self.data

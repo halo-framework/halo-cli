@@ -163,8 +163,6 @@ class Plugin():
 
     def swagger_generate(self):
         data = self.data
-        if "company" in self.halo.settings['mservices'][self.service]['record']:
-            data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + data["info"]["title"]
         tmp = {}
         for d in data['paths']:
             m = data['paths'][d]
@@ -173,23 +171,55 @@ class Plugin():
                     new_m = copy.deepcopy(m)
                     tmp[d] = new_m
         # fix the response and add
-        for k in tmp:
-            # bq methods
-            ref_m = tmp[k]
-            new_m = copy.deepcopy(ref_m)
-            props = new_m['get']['responses']['200']['schema']['items']['properties']
-            for p in props:
-                if "methods" in self.halo.settings['mservices'][self.service]['record']:
-                    for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
-                        if mthd == new_m['get']['operationId']:
-                            for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
-                                if p.endswith(target):
-                                    self.halo.cli.log(new_m['get']['operationId'])
-                                    #props[p]['properties']["ObjectReference"] = {"type":"string"}
-                                    for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
-                                        type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
-                                        props[p][fld] = type
-            data['paths'][k] = new_m
+        if self.fields or self.all:
+            # fix name
+            if "company" in self.halo.settings['mservices'][self.service]['record']:
+                data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company'] + " - " + \
+                                        data["info"]["title"]
+            for k in tmp:
+                ref_m = tmp[k]
+                new_m = copy.deepcopy(ref_m)
+                props = new_m['get']['responses']['200']['schema']['items']['properties']
+                for p in props:
+                    if "methods" in self.halo.settings['mservices'][self.service]['record']:
+                        for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
+                            if mthd == new_m['get']['operationId']:
+                                for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
+                                    if p.endswith(target):
+                                        self.halo.cli.log(new_m['get']['operationId'])
+                                        #props[p]['properties']["ObjectReference"] = {"type":"string"}
+                                        for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
+                                            type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
+                                            props[p]['properties'][fld] = type
+                data['paths'][k] = new_m
+        if self.refactor or self.all:
+            for k in tmp:
+                ref_m = tmp[k]
+                new_m = copy.deepcopy(ref_m)
+                props = new_m['get']['responses']['200']['schema']['items']['properties']
+                for p in props:
+                    if "methods" in self.halo.settings['mservices'][self.service]['record']:
+                        for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
+                            if mthd == new_m['get']['operationId']:
+                                for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
+                                    fields = target['field'].split(".")
+                                    px = p
+                                    for name in fields:
+                                        if px.endswith(name):
+                                            px = props[p]['properties'][name]
+                                        else:
+                                            px = None
+                                            break
+                                    if px:
+                                        self.halo.cli.log(new_m['get']['operationId'])
+                                        px.type = target.type
+                data['paths'][k] = new_m
+        if self.headers or self.all:
+            pass
+        if self.errors or self.all:
+            pass
+        self.halo.cli.log("finished extend successfully")
+
 
     def after_swagger_generate(self):
         data = self.data
