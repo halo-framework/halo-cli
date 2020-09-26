@@ -198,7 +198,6 @@ class Plugin():
                 print(str(f))
                 return f
             """
-            return 0
         except Exception as e:
             raise HaloPluginException(str(e))
 

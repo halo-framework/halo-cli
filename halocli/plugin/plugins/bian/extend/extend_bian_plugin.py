@@ -160,11 +160,11 @@ class Plugin():
             raise Exception("no service found")
         urls = self.halo.settings['mservices'][self.service]['record']['path']
         self.data = Util.analyze_swagger(urls)
-        if "company" in self.halo.settings['mservices'][self.service]['record']:
-            self.data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + self.data["info"]["title"]
 
     def swagger_generate(self):
         data = self.data
+        if "company" in self.halo.settings['mservices'][self.service]['record']:
+            data["info"]["title"] = self.halo.settings['mservices'][self.service]['record']['company']+ " - " + data["info"]["title"]
         tmp = {}
         for d in data['paths']:
             m = data['paths'][d]
@@ -218,7 +218,6 @@ class Plugin():
                 print(str(f))
                 return f
             """
-            return 0
         except Exception as e:
             raise HaloPluginException(str(e))
 

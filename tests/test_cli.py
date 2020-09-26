@@ -103,69 +103,62 @@ class TestUtil(TestCase):
     def test_cli_cqrs(self):
         print('test_cli_cqrs')
         result = self.runner.invoke(cli, ['cqrs'])
-        print('r='+str(result))
         expected_output_log = 'Usage: cli cqrs [OPTIONS] COMMAND [ARGS]...'
-        assert result.exit_code == 0
-        print("r="+result.output)
         assert result.output.startswith(expected_output_log)
 
     def test_cli_cqrs_test(self):
         print('test_cli_cqrs test')
-        #start(False)
         result = self.runner.invoke(cli, ['cqrs','test'])
-        print('r='+str(result))
-        assert result.exit_code == 0
-        print("r="+result.output)
+        expected_output_log = 'Usage: cli cqrs [OPTIONS] COMMAND [ARGS]...'
+        assert result.output.startswith(expected_output_log)
 
     def test_cli_cqrs_method(self):
         print('test_cli_cqrs method')
-        #start(False)
         result = self.runner.invoke(cli, ['cqrs','method'])
-        print('r='+str(result))
-        assert result.exit_code == 2
-        print("r="+result.output)
+        expected_output_log = 'Usage: cli cqrs method'
+        print(result.output)
+        assert result.output.startswith(expected_output_log)
 
     def test_cli_cqrs_method_v(self):
-        print('test_cli_validate valid -a')
-        #start(False)
-        result = self.runner.invoke(cli, '-s abc_settings.json cqrs method -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen -i TaskRecord'.split(" "))
-        print('r='+str(result))
-        assert result.exit_code == 2
-        print("r="+result.output)
+        print('test_cli_cqrs_method method -a')
+        result = self.runner.invoke(cli, '-s abc_settings.json cqrs method -s halo_current_account -p C:\dev\projects\halo\halo-cli\\tests\gen -i TaskRecord'.split(" "))
+        assert result.exit_code == 0
 
     def test_cli_extend(self):
         print('test_cli_extend')
-        #start(False)
         result = self.runner.invoke(cli, ['extend'])
-        print('r='+str(result))
         expected_output_log = 'Usage: cli extend [OPTIONS] COMMAND [ARGS]...'
-        assert result.exit_code == 0
-        print("r="+result.output)
         assert result.output.startswith(expected_output_log)
 
     def test_cli_extend_test(self):
         print('test_cli_extend test')
-        #start(False)
         result = self.runner.invoke(cli, ['extend','test'])
-        print('r='+str(result))
-        assert result.exit_code == 0
-        print("r="+result.output)
+        expected_output_log = 'Usage: cli extend [OPTIONS] COMMAND [ARGS]...'
+        assert result.output.startswith(expected_output_log)
 
     def test_cli_extend_swagger(self):
         print('test_cli_extend swagger')
-        #start(False)
         result = self.runner.invoke(cli, ['extend','swagger'])
-        print('r='+str(result))
-        assert result.exit_code == 2
-        print("r="+result.output)
+        expected_output_log = 'Usage: cli extend swagger'
+        assert result.output.startswith(expected_output_log)
 
     def test_cli_extend_swagger_v(self):
         print('test_cli_extend swagger -a')
-        #start(False)
-        result = self.runner.invoke(cli, ['--debug -s abc_settings.json extend swagger -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen -a true'.split(" ")])
-        print('r='+str(result))
-        assert result.exit_code == 2
-        print("r="+result.output)
+        result = self.runner.invoke(cli, '--debug -s .\gen\abc_settings.json extend swagger -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen -a true'.split(" "))
+        print(result)
+        assert result.exit_code == 0
+
+    def test_cli_extend_mappings_v(self):
+        print('test_cli_extend mappings -a')
+        result = self.runner.invoke(cli, '--debug -s .\gen\abc_settings.json extend mappings -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen'.split(" "))
+        print(result)
+        assert result.exit_code == 0
+
+    def test_cli_extend_filter_v(self):
+        print('test_cli_extend filter -a')
+        result = self.runner.invoke(cli, '--debug -s .\gen\abc_settings.json extend filter -s halo_current_account -p C:\dev\projects\halo\halo-cli\tests\gen'.split(" "))
+        print(result)
+        assert result.exit_code == 0
 
     def test_cli_valid(self):
         print('test_cli_validate')

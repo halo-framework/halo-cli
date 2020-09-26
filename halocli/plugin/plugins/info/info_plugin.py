@@ -41,7 +41,7 @@ class Plugin():
                         'usage': 'Template for the service',
                         'shortcut': 't'
                     },
-                    'template-url': {
+                    'template_url': {
                         'usage': 'Template URL for the service. Supports: GitHub, BitBucket',
                         'shortcut': 'u'
                     },
@@ -59,7 +59,7 @@ class Plugin():
 
         # set hooks
         self.hooks = {
-            'create:project': self.create_project,
+            'details:create': self.details_create,
         }
 
         # logger.info('finished plugin')
@@ -69,22 +69,23 @@ class Plugin():
         # do more
 
 
-    def create_project(self):
+    def details_create(self):
         if hasattr(self, 'options'):
             for o in self.options:
                 if 'template' in o:
                     template = o['template']
-                if 'template-url' in o:
-                    template_url = o['template-url']
+                if 'template_url' in o:
+                    template_url = o['template_url']
                 if 'path' in o:
                     path = o['path']
                 if 'name' in o:
                     name = o['name']
         else:
             return
-        ret = Util.config_settings(self.halo.settings, template,template_url,path,name)
-        if ret == 0:
-            self.halo.cli.log("finished config seccessfuly")
+        #ret = Util.config_settings(self.halo.settings, template,template_url,path,name)
+        #if ret == 0:
+        #    self.halo.cli.log("finished config seccessfuly")
+        ret = 3
         return ret
 
 

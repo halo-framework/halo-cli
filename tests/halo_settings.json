@@ -5,7 +5,7 @@
 	],
 	"mservices": {
 		"halo_current_account": {
-			"urls": ".\\a.yml",
+			"urls": ".\\gen\\bian_swgr\\current-account.json",
 			"record": {
 				"name":"Current Account",
 				"id":"37"
