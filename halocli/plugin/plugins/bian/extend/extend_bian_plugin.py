@@ -214,6 +214,8 @@ class Plugin():
                                     break
                             if propsx:
                                 propsx['type'] = target['type']
+                                if "format" in target:
+                                    propsx['format'] = target['format']
                 data['paths'][k] = new_m
         if self.headers or self.all:
             pass

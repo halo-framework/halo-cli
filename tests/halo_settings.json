@@ -20,16 +20,16 @@
 					"RetrieveCurrentAccountReferenceIdsExtend": {
 						"added_fields": {
 							"currentAccountFulfillmentArrangementRetrieveActionTaskRecord": {
-								"name1": {"type": "string","description": "desc1","example": "example1"},
-								"name2": {"type":"number","description": "desc2","example": "example2"},
-								"name3": {"type":"string","description": "desc3","example": "example3"},
-								"name4": {"type":"number","description": "desc4","example": "example4"}
+								"name1": {"type": "string","description": "desc1","example": "example1","format": "date"},
+								"name2": {"type":"number","description": "desc2","example": "example2","format": "decimal"},
+								"name3": {"type":"string","description": "desc3","example": "example3","format": "binary"},
+								"name4": {"type":"number","description": "desc4","example": "example4","format": "decimal"}
 							},
 							"currentAccountFulfillmentArrangementInstanceRecord.datearray": {
-								"name1": {"type": "string","description": "desc1","example": "example1"},
-								"name2": {"type":"number","description": "desc2","example": "example2"},
-								"name3": {"type":"string","description": "desc3","example": "example3"},
-								"name4": {"type":"number","description": "desc4","example": "example4"}
+								"name1": {"type": "string","description": "desc1","example": "example1","format": "date"},
+								"name2": {"type":"number","description": "desc2","example": "example2","format": "decimal"},
+								"name3": {"type":"string","description": "desc3","example": "example3","format": "binary"},
+								"name4": {"type":"number","description": "desc4","example": "example4","format": "decimal"}
 							}
 						},
 						"field_mappings": {
@@ -51,7 +51,7 @@
 							{"field": "f1","type": "string","conditions": []},{"field": "f2","type": "number","conditions": []}
 						],
 						"refactor": [
-							{"field": "currentAccountFulfillmentArrangementInstanceRecord.currentAccountNumber","type": "number"}
+							{"field": "currentAccountFulfillmentArrangementInstanceRecord.currentAccountNumber","type": "number","format": "decimal"}
 						],
 						"headers": {
 							"request": {
