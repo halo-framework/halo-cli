@@ -48,7 +48,8 @@
 							}
 						},
 						"collection-filter": [
-							{"field": "f1","type": "string","conditions": []},{"field": "f2","type": "number","conditions": []}
+							{"name": "filter1","type": "string","conditions": []},
+							{"field": "f2","type": "number","conditions": []}
 						],
 						"refactor": [
 							{"field": "currentAccountFulfillmentArrangementInstanceRecord.currentAccountNumber","type": "number","format": "decimal"}
