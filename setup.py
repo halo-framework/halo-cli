@@ -3,8 +3,9 @@ from setuptools import setup, find_packages
 # twine upload dist/halo-cli-0.1.tar.gz -r pypi
 setup(
     name='halo-cli',
-    version='0.2.3',
-    packages=find_packages() + find_packages(where="./schemas") + find_packages(where="./plugin"),
+    version='0.2.4',
+    packages=find_packages(),
+    data_files=[('schemas', ['schemas/*.json'])],
     include_package_data=True,
     install_requires=[
         'Click==7.1.2','PyInquirer==1.0.3','rich==5.1.2','pyfiglet==0.8post1','colorama==0.4.3','termcolor==1.1.0','six==1.15.0','clint==0.5.1',#cli
