@@ -146,12 +146,12 @@ If an Abort exception is raised print the string Aborted! to standard error and 
 
 if it goes through well, exit the program with exit code 0.
 """
-def start(run=None):
+def start(run=None,options=None):
     global builder
     log("HALO CLI", color="blue", figlet=True)
     log("Welcome to HALO CLI", "green")
     try:
-        builder = Builder()
+        builder = Builder(options)
     except ConfigException as e:
         log("Error in HALO CLI Config: "+str(e), "red")
         sys.exit(1)
@@ -186,7 +186,7 @@ def start(run=None):
                 log("\nError in HALO CLI Cmd: " + str(e.code), "red")
             sys.exit(1)
 
-    return builder
+    return cli
 
 @click.group()
 @click.option('--debug/--no-debug', default=False)
@@ -254,8 +254,11 @@ class Builder:
     names = {}
     proxy = None
 
-    def __init__(self):
-        self.options = sys.argv[1:]
+    def __init__(self,options=None):
+        if options:
+            self.options = options
+        else:
+            self.options = sys.argv[1:]
         self.plugins = self.get_plugins()
         self.cmd = Cmd(self.cli,self.plugin_mngr)
 

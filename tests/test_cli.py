@@ -244,3 +244,12 @@ class TestUtil(TestCase):
         print('r='+str(result))
         assert result.exit_code == 2
         print("r="+result.output)
+
+    def test_cli_start(self):
+        print('test_cli_validate valid -a')
+        result = self.runner.invoke(self.builder, ['validate','valid','-a','x'])
+        print('r='+str(result))
+        expected_output_log = 'Usage: cli validate [OPTIONS] COMMAND [ARGS]...'
+        assert result.exit_code == 2
+        print("r="+result.output)
+        #assert result.output.startswith(expected_output_log)
