@@ -235,10 +235,10 @@ class Plugin():
         try:
             path = self.path
             if path:
-                file_path = os.path.join(path, str(uuid.uuid4()) + ".json")
+                file_path = os.path.join(path, str(uuid.uuid4()) + "_extend.json")
             else:
                 dir_tmp = tempfile.TemporaryDirectory()
-                file_path = os.path.join(dir_tmp.name, str(uuid.uuid4()) + ".json")
+                file_path = os.path.join(dir_tmp.name, str(uuid.uuid4()) + "_extend.json")
             logger.debug(file_path)
             f = open(file_path, "a")
             f.write("")
