@@ -27,6 +27,10 @@ class PluginMngr():
 
     def __init__(self, halo):
         self.halo = halo
+        self.plugins = {}
+        self.plugin_commands = {}
+        self.commands = {}
+        self.counter = {}
         self.load_command_event_mappings()
 
     def add(self,event,diff):
