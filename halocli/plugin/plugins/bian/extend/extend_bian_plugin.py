@@ -184,7 +184,10 @@ class Plugin():
             for k in tmp:
                 new_m = tmp[k]
                 for o in new_m:
-                    props = new_m[o]['responses']['200']['schema']['items']['properties']
+                    if 'items' in new_m[o]['responses']['200']['schema']:
+                        props = new_m[o]['responses']['200']['schema']['items']['properties']
+                    else:
+                        props = new_m[o]['responses']['200']['schema']['properties']
                     mthd = new_m[o]['operationId']
                     for p in props:
                         for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
