@@ -175,6 +175,36 @@ class Plugin():
                     new_m = copy.deepcopy(m)
                     tmp[d] = new_m
                     break
+        if self.refactor or self.all:
+            for k in tmp:
+                new_m = tmp[k]
+                for o in new_m:
+                    if '200' in new_m[o]['responses']:
+                        props = new_m[o]['responses']['200']['schema']['items']['properties']
+                    else:
+                        props = new_m[o]['responses']['201']['schema']['items']['properties']
+                    mthd = new_m[o]['operationId']
+                    for p in props:
+                        for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
+                            fields = target['field'].split(".")
+                            propsx = props
+                            for name in fields:
+                                if name in propsx:
+                                    propsx = propsx[name]
+                                else:
+                                    if 'properties' in propsx:
+                                        propsx = propsx['properties'][name]
+                                    else:
+                                        propsx = None
+                                        break
+                            if propsx:
+                                propsx['type'] = target['type']
+                                if "format" in target:
+                                    propsx['format'] = target['format']
+                                if 'properties' in target:
+                                    propsx['properties'] = {}
+                data['paths'][k] = new_m
+            self.halo.cli.log("finished refactor successfully")
         # fix the response and add
         if self.fields or self.all:
             # fix name
@@ -184,46 +214,41 @@ class Plugin():
             for k in tmp:
                 new_m = tmp[k]
                 for o in new_m:
-                    if 'items' in new_m[o]['responses']['200']['schema']:
-                        props = new_m[o]['responses']['200']['schema']['items']['properties']
+                    if '200' in new_m[o]['responses']:
+                        if 'items' in new_m[o]['responses']['200']['schema']:
+                            props = new_m[o]['responses']['200']['schema']['items']['properties']
+                        else:
+                            props = new_m[o]['responses']['200']['schema']['properties']
                     else:
-                        props = new_m[o]['responses']['200']['schema']['properties']
+                        if 'items' in new_m[o]['responses']['201']['schema']:
+                            props = new_m[o]['responses']['201']['schema']['items']['properties']
+                        else:
+                            props = new_m[o]['responses']['201']['schema']['properties']
                     mthd = new_m[o]['operationId']
                     for p in props:
                         for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
-                            if p.endswith(target):
-                                self.halo.cli.log(new_m['get']['operationId'])
-                                for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
-                                    type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
-                                    props[p]['properties'][fld] = type
-                data['paths'][k] = new_m
-        if self.refactor or self.all:
-            for k in tmp:
-                new_m = tmp[k]
-                for o in new_m:
-                    props = new_m[o]['responses']['200']['schema']['items']['properties']
-                    mthd = new_m[o]['operationId']
-                    for p in props:
-                        for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
-                            fields = target['field'].split(".")
+                            fields = target.split(".")
                             propsx = props
                             for name in fields:
                                 if name in propsx:
                                     propsx = propsx[name]
-                                elif 'properties' in propsx:
-                                    propsx = propsx['properties'][name]
                                 else:
-                                    propsx = None
-                                    break
+                                    if 'properties' in propsx:
+                                        propsx = propsx['properties'][name]
+                                    else:
+                                        propsx = None
+                                        break
                             if propsx:
-                                propsx['type'] = target['type']
-                                if "format" in target:
-                                    propsx['format'] = target['format']
+                                for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
+                                    type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
+                                    propsx['properties'][fld] = type
+                                    self.halo.cli.log(new_m['get']['operationId'] + ":" +fld)
                 data['paths'][k] = new_m
+            self.halo.cli.log("finished fields successfully")
         if self.headers or self.all:
-            pass
+            self.halo.cli.log("finished headers successfully")
         if self.errors or self.all:
-            pass
+            self.halo.cli.log("finished errors successfully")
         self.halo.cli.log("finished extend successfully")
 
 
@@ -271,7 +296,10 @@ class Plugin():
             # bq methods
             ref_m = tmp[k]
             new_m = copy.deepcopy(ref_m)
-            props = new_m['get']['responses']['200']['schema']['items']['properties']
+            if '200' in new_m['get']['responses']:
+                props = new_m['get']['responses']['200']['schema']['items']['properties']
+            else:
+                props = new_m['get']['responses']['201']['schema']['items']['properties']
             for p in props:
                 if "methods" in self.halo.settings['mservices'][self.service]['record']:
                     for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
