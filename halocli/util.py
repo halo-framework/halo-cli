@@ -7,6 +7,7 @@ import logging
 import json
 from os.path import dirname
 from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 import importlib
 import pkgutil
 import inspect
@@ -17,6 +18,7 @@ from flex.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
+schema = None
 
 class Util():
 
@@ -58,11 +60,13 @@ class Util():
             return json.loads(schema_file.read())
 
     @staticmethod
-    def assert_valid_schema(data, schema_file,dir=None):
+    def assert_valid_schema(schema_file,dir=None):
         """ Checks whether the given data matches the schema """
+        global schema
 
-        schema = Util.load_json_schema(schema_file,dir)
-        return validate(data, schema)
+        if not schema:
+            schema = Util.load_json_schema(schema_file,dir)
+        return schema
 
     @staticmethod
     def load_settings_file(settings_file=None):
@@ -84,11 +88,9 @@ class Util():
 
         schema_file = "halo_schema.json"
         try:
-            validated = Util.assert_valid_schema(halo_settings, schema_file)
-            logger.debug("ret="+str(validated))
-            #if not validated:
-            #    raise ValidException("Please configure your halo_settings file properly!.")
-        except Exception as e:
+            schemax = Util.assert_valid_schema(schema_file)
+            validate(instance=halo_settings, schema=schemax)
+        except ValidationError as e:
             raise ValidException("Please configure your halo_settings file properly:"+str(e))
         return halo_settings
 

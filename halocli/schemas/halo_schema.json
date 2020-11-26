@@ -5,274 +5,216 @@
 	"description": "Halo framework settings with all app components and elements",
 	"type": "object",
 	"properties": {
-		"stages": {
-              "type": "array",
-              "items": {"enum": ["dev", "tst","prd"]}
-            },
-		"application_name": {"type": "string", "maxLength": 128},
-		"alias": {"type": "string", "maxLength": 15,"description": "add your alias to the project"},
-		"aws_region": {"enum": ["us-east-1", "us-east-2","us-west-1","us-west-2","ca-central-1","eu-central-1","eu-west-1","eu-west-2","eu-west-3","ap-northeast-1","ap-northeast-2","ap-northeast-3","ap-southeast-1","ap-southeast-2","ap-south-1","sa-east-1"]},
-		"profile_name": {"type": "string", "maxLength": 128},
-		"deploy_tool": {"enum": ["zappa","sls"]},
+		"application_name": {
+			"type": "string",
+			"maxLength": 128
+		},
 		"plugins": {
-              "type": "array",
-              "items": {"type": "string", "maxLength": 128}
-            },
+			"type": "array",
+			"items": {
+				"type": "string",
+				"maxLength": 128
+			}
+		},
 		"mservices": {
 			"type": "object",
 			"patternProperties": {
 				"^.*$": {
 					"type": "object",
-					"properties": {					
-						"type": {"enum": ["front","back","north","south","rpc"],
-							"description": "front=http+html, back=http+json, north=api+html, south=api+json,rpc=http+thrift"},
-						"comment": {"type": "string"},
-						"url": {"type": "string","format": "uri"},
-						"overwrite_if_exists": {"type": "boolean"},
-						"runtime": {"enum": ["python3.6","python3.7","python3.8"]},
-						"framework": {"enum": ["django","flask"]},
-						"libs": {
-							  "type": "array",
-							  "items": {"type": "string"}
-							},
-						"extra_permissions": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"Effect": {"type": "string"},
-									"Action": {
-									  "type": "array",
-									  "items": {"type": "string"}
-									},
-									"Resource": {"type": "string"}
-								}
-							}
+					"properties": {
+						"type": {
+							"enum": [
+								"front",
+								"back",
+								"north",
+								"south",
+								"rpc"
+							],
+							"description": "front=http+html, back=http+json, north=api+html, south=api+json,rpc=http+thrift"
 						},
-						"urls": {"type": "string"},
-						"db": {
+						"comment": {
+							"type": "string"
+						},
+						"url": {
+							"type": "string",
+							"format": "uri"
+						},
+						"urls": {
+							"type": "string"
+						},
+						"record": {
 							"type": "object",
 							"properties": {
-								"type": {"enum": ["dynamodb"]},
-								"db_ver": {"type": "integer","minimum": 1},
-								"schema": {
+								"path": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"id": {
+									"type": "integer",
+									"minimum": 1
+								},
+								"methods": {
 									"type": "object",
-									"properties": {
-										"indexes": {
-											"type": "object",
-											"patternProperties": {
-												"^.*$": {
-													"type": "object",
-													"properties": {
-														"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-														"type": {"enum": ["global","local"]},
-														"projection" : {"enum": ["All","KeysOnly"]},
-														"fields": {
-															"type": "array",
-															"items": {
-																"type": "object",
-																"properties": {
-																	"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-																	"type": {"enum": ["UnicodeAttribute","NumberAttribute","UTCDateTimeAttribute","BooleanAttribute","JSONAttribute","ListAttribute","MapAttribute"]},
-																	"key": {"enum": ["hash_key","range_key"]}
-																}
-															}
-														}
-													}
-												}
-											}
-										},
-										"tables": {
-											"type": "object",
-											"patternProperties": {
-												"^.*$": {
-													"type": "object",
-													"properties": {
-														"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-														"type": {"enum": ["Model"]},
-														"read_capacity_units": {"type": "integer","minimum": 1},
-														"write_capacity_units": {"type": "integer","minimum": 1},
-														"fields": {
-															"type": "array",
-															"items": {
-																"type": "object",
-																"properties": {
-																	"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-																	"type": {"enum": ["UnicodeAttribute","NumberAttribute","UTCDateTimeAttribute","BooleanAttribute","JSONAttribute","ListAttribute","MapAttribute","Index"]},
-																	"null": {"enum": ["True","False"]},
-																	"default": {"type": "string"},
-																	"key": {"enum": ["hash_key","range_key"]}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						},
-						"apis": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"name": {"type": "string", "maxLength": 128},
-									"url": {
-                                        "type": "string",
-                                        "format": "uri",
-                                        "pattern": "^(http|https|rpc|service)://"
-                                    },
-									"type": {"enum": ["service","rest","soap"]},
-									"keys": {
-										"type": "array",
-										"items": {
+									"patternProperties": {
+										"^.*$": {
 											"type": "object",
 											"properties": {
-												"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-												"val": {"type": "string"}
-											}
-										}
-									}
-								}
-							}
-						},
-						"events": {
-							"type": "object",
-							"properties": {
-								"send": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"name": {
-												"type": "string",
-												"maxLength": 128
-											},
-											"target": {
-												"type": "string",
-												"maxLength": 128
-											},
-											"key": {
-												"type": "string",
-												"maxLength": 128
-											},
-											"val": {
-												"type": "string",
-												"maxLength": 128
-											}
-										}
-									}
-								},
-								"get": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"name": {
-												"type": "string",
-												"maxLength": 128
-											},
-											"key": {
-												"type": "string",
-												"maxLength": 128
-											},
-											"val": {
-												"type": "string",
-												"maxLength": 128
-											}
-										}
-									}
-								}
-							}
-						},
-						"dev": {
-							"type": "object",
-							"properties": {
-								"s3_bucket": {"type": "string","maxLength": 15,"format":"[a-zA-Z0-9\\-]"},
-								"name": {"type": "string", "maxLength": 15,"description": "add your name to the env"},
-								"apis": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-											"url": {
-												"type": "string",
-												"format": "uri",
-												"pattern": "^(http|https|rpc|service)://"
-											},
-											"keys": {
-												"type": "array",
-												"items": {
+												"added_fields": {
 													"type": "object",
-													"properties": {
-														"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-														"val": {"type": "string"}
+													"patternProperties": {
+														"^.*$": {
+															"type": "object",
+
+																"patternProperties": {
+																	"^.*$": {
+																		"type": "object",
+																		"properties": {
+																			"type": {
+																				"enum": [
+																					"string",
+																					"number",
+																					"integer",
+																					"boolean"
+																				]
+																			},
+																			"description": {
+																				"type": "string",
+																				"maxLength": 115,
+																				"format": "[a-zA-Z0-9_]"
+																			},
+																			"example": {
+																				"type": "string",
+																				"maxLength": 115,
+																				"format": "[a-zA-Z0-9_]"
+																			},
+																			"format": {
+																				"enum": [
+																					"",
+																					"int32",
+																					"int64",
+																					"float",
+																					"double",
+																					"byte",
+																					"binary",
+																					"date",
+																					"date-time",
+																					"password"
+																				]
+																			}
+																		}
+																	}
+																}
+
+														}
 													}
-												}
-											}
-										}
-									}
-								}
-							}
-						},
-						"tst": {
-							"type": "object",
-							"properties": {
-								"s3_bucket": {"type": "string","maxLength": 15,"format":"[a-zA-Z0-9\\-]"},
-								"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]" ,"description": "add your name to the env"},
-								"apis": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-											"url": {
-												"type": "string",
-												"format": "uri",
-												"pattern": "^(http|https|rpc|service)://"
-											},
-											"keys": {
-												"type": "array",
-												"items": {
+												},
+												"field_mappings": {
 													"type": "object",
-													"properties": {
-														"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-														"val": {"type": "string"}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						},
-						"prd": {
-							"type": "object",
-							"properties": {
-								"s3_bucket": {"type": "string","maxLength": 15,"format":"[a-zA-Z0-9\\-]"},
-								"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]","description": "add your name to the env"},
-								"apis": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-											"url": {
-												"type": "string",
-												"format": "uri",
-												"pattern": "^(http|https|rpc|service)://"
-											},
-											"keys": {
-												"type": "array",
-												"items": {
-													"type": "object",
-													"properties": {
-														"name": {"type": "string", "maxLength": 15,"format":"[a-zA-Z0-9_]"},
-														"val": {"type": "string"}
-													}
+													"patternProperties": {
+														"^.*$": {
+															"type": "object",
+
+																"patternProperties": {
+																	"^.*$": {
+																		"type": "object",
+																		"properties": {
+																			"from": {
+																				"type": "array",
+																				"items": {
+																					"type": "object",
+																					"patternProperties": {
+																						"^.*$": {
+																							"enum": [
+																								"string",
+																								"number",
+																								"integer",
+																								"boolean"
+																							]
+																						}
+																					}
+																				}
+																			},
+																			"to": {
+																				"type": "object",
+																				"patternProperties": {
+																					"^.*$": {
+																						"enum": [
+																							"string",
+																							"number",
+																							"integer",
+																							"boolean"
+																						]
+																					}
+																				}
+																			},
+																			"instructions": {
+																				"type": "string"
+																			}
+																		}
+																	}
+																}
+
+														}
+													},
+													"collection-filter": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"patternProperties": {
+																"^.*$": {
+																	"enum": [
+																		"=",
+																		">",
+																		"<",
+																		"!="
+																	],
+																	"type": "string"
+																}
+															}
+														}
+													},
+													"refactor": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"properties": {
+																"field": {
+																	"type": "string",
+																	"maxLength": 128
+																},
+																"type": {
+																	"enum": [
+																		"object",
+																		"string",
+																		"number",
+																		"integer",
+																		"boolean"
+																	]
+																},
+																"properties": {
+																	"type": "string",
+																	"maxLength": 128
+																},
+																"format": {
+																	"enum": [
+																		"int32",
+																		"int64",
+																		"float",
+																		"double",
+																		"byte",
+																		"binary",
+																		"date",
+																		"date-time",
+																		"password"
+																	]
+																}
+															}
+														}
+													},
+													"headers": {},
+													"errors": {}
 												}
 											}
 										}
@@ -284,5 +226,5 @@
 				}
 			}
 		}
-	}			
+	}
 }
