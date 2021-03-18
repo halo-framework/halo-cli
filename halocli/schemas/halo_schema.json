@@ -115,28 +115,13 @@
 													"patternProperties": {
 														"^.*$": {
 															"type": "object",
-
-																"patternProperties": {
-																	"^.*$": {
-																		"type": "object",
-																		"properties": {
-																			"from": {
-																				"type": "array",
-																				"items": {
-																					"type": "object",
-																					"patternProperties": {
-																						"^.*$": {
-																							"enum": [
-																								"string",
-																								"number",
-																								"integer",
-																								"boolean"
-																							]
-																						}
-																					}
-																				}
-																			},
-																			"to": {
+															"patternProperties": {
+																"^.*$": {
+																	"type": "object",
+																	"properties": {
+																		"from": {
+																			"type": "array",
+																			"items": {
 																				"type": "object",
 																				"patternProperties": {
 																					"^.*$": {
@@ -148,77 +133,106 @@
 																						]
 																					}
 																				}
-																			},
-																			"instructions": {
-																				"type": "string"
 																			}
+																		},
+																		"to": {
+																			"type": "object",
+																			"patternProperties": {
+																				"^.*$": {
+																					"enum": [
+																						"string",
+																						"number",
+																						"integer",
+																						"boolean"
+																					]
+																				}
+																			}
+																		},
+																		"instructions": {
+																			"type": "string"
 																		}
 																	}
 																}
-
-														}
-													},
-													"collection-filter": {
-														"type": "array",
-														"items": {
-															"type": "object",
-															"patternProperties": {
-																"^.*$": {
-																	"enum": [
-																		"=",
-																		">",
-																		"<",
-																		"!="
-																	],
-																	"type": "string"
-																}
 															}
 														}
+														}
 													},
-													"refactor": {
-														"type": "array",
-														"items": {
-															"type": "object",
+												"collection-filter": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"patternProperties": {
+															"^.*$": {
+																"enum": [
+																	"=",
+																	">",
+																	"<",
+																	"!="
+																],
+																"type": "string"
+															}
+														}
+													}
+												},
+												"refactor": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"field": {
+																"type": "string",
+																"maxLength": 128
+															},
+															"type": {
+																"enum": [
+																	"object",
+																	"string",
+																	"number",
+																	"integer",
+																	"boolean"
+																]
+															},
 															"properties": {
-																"field": {
-																	"type": "string",
-																	"maxLength": 128
-																},
-																"type": {
-																	"enum": [
-																		"object",
-																		"string",
-																		"number",
-																		"integer",
-																		"boolean"
-																	]
-																},
-																"properties": {
-																	"type": "string",
-																	"maxLength": 128
-																},
-																"format": {
-																	"enum": [
-																		"int32",
-																		"int64",
-																		"float",
-																		"double",
-																		"byte",
-																		"binary",
-																		"date",
-																		"date-time",
-																		"password"
-																	]
-																}
+																"type": "string",
+																"maxLength": 128
+															},
+															"format": {
+																"enum": [
+																	"int32",
+																	"int64",
+																	"float",
+																	"double",
+																	"byte",
+																	"binary",
+																	"date",
+																	"date-time",
+																	"password"
+																]
 															}
 														}
-													},
-													"headers": {},
-													"errors": {}
+													}
+												},
+												"headers": {},
+												"errors": {},
+												"version": {"type": "string"}
 												}
 											}
 										}
+									},
+								"sbq": {
+									"type": "array",
+									"items": {
+										"type": "string",
+										"maxLength": 128
 									}
+								},
+								"endpoints": {
+									"type": "array",
+									"items": {
+										"type": "string",
+										"maxLength": 128
+									}
+								}
 								}
 							}
 						}
@@ -227,4 +241,4 @@
 			}
 		}
 	}
-}
+
