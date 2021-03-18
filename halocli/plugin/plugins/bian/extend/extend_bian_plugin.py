@@ -190,9 +190,15 @@ class Plugin():
                 new_m = tmp[k]
                 for o in new_m:
                     if '200' in new_m[o]['responses']:
-                        props = new_m[o]['responses']['200']['schema']['items']['properties']
+                        if 'items' in new_m[o]['responses']['200']['schema']:
+                            props = new_m[o]['responses']['200']['schema']['items']['properties']
+                        else:
+                            props = new_m[o]['responses']['200']['schema']['properties']
                     else:
-                        props = new_m[o]['responses']['201']['schema']['items']['properties']
+                        if 'items' in new_m[o]['responses']['201']['schema']:
+                            props = new_m[o]['responses']['201']['schema']['items']['properties']
+                        else:
+                            props = new_m[o]['responses']['201']['schema']['properties']
                     mthd = new_m[o]['operationId']
                     for p in props:
                         for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
@@ -307,9 +313,15 @@ class Plugin():
             ref_m = tmp[k]
             new_m = copy.deepcopy(ref_m)
             if '200' in new_m['get']['responses']:
-                props = new_m['get']['responses']['200']['schema']['items']['properties']
+                if 'items' in new_m['get']['responses']['200']['schema']:
+                    props = new_m['get']['responses']['200']['schema']['items']['properties']
+                else:
+                    props = new_m['get']['responses']['200']['schema']['properties']
             else:
-                props = new_m['get']['responses']['201']['schema']['items']['properties']
+                if 'items' in new_m['get']['responses']['201']['schema']:
+                    props = new_m['get']['responses']['201']['schema']['items']['properties']
+                else:
+                    props = new_m['get']['responses']['201']['schema']['properties']
             for p in props:
                 if "methods" in self.halo.settings['mservices'][self.service]['record']:
                     for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
