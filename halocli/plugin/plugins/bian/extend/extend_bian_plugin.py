@@ -162,12 +162,17 @@ class Plugin():
         self.data = Util.analyze_swagger(urls)
         if "methods" in self.halo.settings['mservices'][self.service]['record']:
             self.methods = self.halo.settings['mservices'][self.service]['record']['methods']
+            if "exclude" in self.halo.settings['mservices'][self.service]['record']:
+                self.exclude = self.halo.settings['mservices'][self.service]['record']['exclude']
+            else:
+                self.exclude = False
         else:
             self.methods = []
 
     def swagger_generate(self):
         data = self.data
         tmp = {}
+        clear = []
         for d in data['paths']:
             m = data['paths'][d]
             for o in m:
@@ -175,6 +180,11 @@ class Plugin():
                     new_m = copy.deepcopy(m)
                     tmp[d] = new_m
                     break
+            if self.exclude:
+                if d not in tmp:
+                    clear.append(d)
+        for d in clear:
+            del data['paths'][d]
         if self.refactor or self.all:
             for k in tmp:
                 new_m = tmp[k]

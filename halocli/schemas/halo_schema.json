@@ -55,6 +55,10 @@
 									"type": "integer",
 									"minimum": 1
 								},
+								"exclude": {
+									"type": "boolean",
+									"default": false
+								},
 								"methods": {
 									"type": "object",
 									"patternProperties": {
@@ -222,17 +226,41 @@
 								"sbq": {
 									"type": "array",
 									"items": {
-										"type": "string",
-										"maxLength": 128
+										"type": "object",
+										"properties": {
+											"base_method": {
+												"type": "string",
+												"maxLength": 128
+											},
+											"name": {
+												"type": "string",
+												"maxLength": 128
+											},
+											"values": {
+												"type": "array",
+												"items": {
+													"type": "string",
+													"maxLength": 128
+												}
+											}
+										}
 									}
 								},
 								"endpoints": {
 									"type": "array",
 									"items": {
-										"type": "string",
-										"maxLength": 128
+										"type": "object",
+										"properties": {
+											"base_method": {
+												"type": "string",
+												"maxLength": 128
+											},
+											"name": {
+												"type": "string",
+												"maxLength": 128
+											}
+										}
 									}
-								}
 								}
 							}
 						}
@@ -241,4 +269,5 @@
 			}
 		}
 	}
+}
 
