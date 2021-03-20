@@ -9,8 +9,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'Click==7.1.2','PyInquirer==1.0.3','rich==5.1.2','pyfiglet==0.8post1','colorama==0.4.3','termcolor==1.1.0','six==1.15.0','clint==0.5.1',#cli
-        'pip==19.0.3','jsonschema==2.6.0', # pkgs + schema
-        'flex==6.14.1','swagger-py-codegen==0.4.0' # swagger
+        'pip==19.0.3','jsonschema==3.2.0', # pkgs + schema
+        'flex==6.14.1','swagger-py-codegen==0.4.0'#,'openapi_spec_validator==0.2.9' # swagger
     ],
     entry_points='''
         [console_scripts]

@@ -70,7 +70,6 @@
 													"patternProperties": {
 														"^.*$": {
 															"type": "object",
-
 																"patternProperties": {
 																	"^.*$": {
 																		"type": "object",
@@ -80,7 +79,8 @@
 																					"string",
 																					"number",
 																					"integer",
-																					"boolean"
+																					"boolean",
+																					"object"
 																				]
 																			},
 																			"description": {

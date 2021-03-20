@@ -174,8 +174,18 @@ class Util():
         except ValidationError as e:
             raise ValidException(str(e))
 
-    #####
+###################
+"""
 
+
+    @staticmethod
+    def analyze_swagger(swagger_file_path):
+        from openapi_spec_validator import validate_spec
+        from openapi_spec_validator.readers import read_from_filename
+        spec_dict, spec_url = read_from_filename(swagger_file_path)
+        return spec_dict
+"""
+###################
 
 class ImmutableDict(dict):
     def __setitem__(self, key, value):
