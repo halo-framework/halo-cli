@@ -21,6 +21,7 @@
 											"type": "string",
 											"description": "desc1",
 											"example": "example1",
+											"maxLength": 100,
 											"pattern": "^\\d{3}-\\d{2}-\\d{4}$"
 										}
 									}
