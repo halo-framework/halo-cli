@@ -1,0 +1,119 @@
+{
+	"application_name": "bian_service_domains",
+	"plugins":[
+
+	],
+	"mservices": {
+		"halo_current_account": {
+			"record": {
+				"path": "current-account.json",
+				"name":"Current Account",
+				"id":137,
+				"exclude": true,
+				"methods": {
+					"retrieveCurrentAccountFulfillmentArrangementDepositsAndWithdrawals": {
+						"added_fields": {
+							"depositsAndWithdrawalsRetrieveActionTaskRecord": {
+								"DescriptionBeneficiaryName": {
+									"type": "object",
+                            		"properties": {
+										"serviceDomainActivationActionTaskRecord": {
+											"type": "string",
+											"description": "desc1",
+											"example": "example1",
+											"pattern": "^\\d{3}-\\d{2}-\\d{4}$"
+										}
+									}
+								},
+								"PhoneNumber": {"type":"string","description": "desc2","example": "example2","format": ""},
+								"TransferOrderType": {"type":"string","description": "desc3","example": "example3","format": ""},
+								"Linkage": {"type":"string","description": "desc4","example": "example4","format": ""},
+								
+								"CompletedOrderFlag": {"type": "string","description": "desc1","example": "example1","format": ""},
+								"UncompletedOrderStatusCode": {"type":"string","description": "desc2","example": "example2","format": ""},
+								"OrderCancelFlag": {"type":"string","description": "desc3","example": "example3","format": ""},
+								"TransferOrderReferance": {"type":"string","description": "desc4","example": "example4","format": ""},
+								
+								"Operation136ReferanceNumber": {"type": "string","description": "desc1","example": "example1","format": ""},
+								"Channel": {"type":"string","description": "desc2","example": "example2","format": ""},
+								"ChannelCode": {"type":"string","description": "desc3","example": "example3","format": "double"},
+								"Token": {"type":"string","description": "desc4","example": "example4","format": "date"},
+								
+								"AsOfDate": {"type": "string","description": "desc1","example": "example1","format": "date-time"}
+							},
+							"paymentsInstanceRecord.paymentConfiguration.paymentSchedule": {
+								"DayOfPayment": {"type": "string","description": "desc1","example": "example1","format": ""},
+								"StandingOrderLastDebitDate": {"type":"string","description": "desc2","example": "example2","format": "date"},
+								"OperationDate": {"type":"string","description": "desc3","example": "example3","format": "date"},
+								"PaymentTransactionStartDate": {"type":"string","description": "desc4","example": "example4","format": "date"},
+								
+								"PaymentTransactionEndDate": {"type": "string","description": "desc1","example": "example1","format": "date"},
+								"DebitAuthEndDate": {"type":"string","description": "desc2","example": "example2","format": ""},
+								"LastDebitDate": {"type":"string","description": "desc4","example": "example4","format": ""}
+							},
+							"paymentsInstanceRecord.paymentConfiguration.directDebitMandateReference.directDebitMandateSettings": {
+								"OrgenizationCode": {"type": "integer","description": "desc1","example": "example1","format": "int32"},
+								"OrgenizationName": {"type":"string","description": "desc2","example": "example2","format": ""},
+								"DebitAuthReferance": {"type":"string","description": "desc3","example": "example3","format": ""},
+								"DebitAuthMaxAmount": {"type":"integer","description": "desc4","example": "example4","format": "int64"},
+								
+								"LastDebitAmount": {"type": "number","description": "desc1","example": "example1","format": "float"},
+								"DebitAuthOrderStatus": {"type":"string","description": "desc2","example": "example2","format": ""},
+								"DebitAuthOrderBank": {"type":"string","description": "desc4","example": "example4","format": ""},
+								"DebitAuthOrderCode": {"type":"integer","description": "desc4","example": "example4","format": "int32"},
+								"DebitAuthSource": {"type":"string","description": "desc4","example": "example4","format": ""},
+								"AsOfDate": {"type":"string","description": "desc4","example": "example4","format": "date"}
+							}
+						},
+						"field_mappings": {
+							"trx_tag1": {
+								"mapping1": {
+									"from": [
+										{
+											"field1": "string"
+										}
+									],
+									"to": {
+										"field2": "string"
+									},
+									"instructions": "javascript code"
+								}
+							}
+						},
+						"collection-filter": [
+							
+						],
+						"refactor": [
+							{"field": "paymentsInstanceRecord.paymentConfiguration.paymentSchedule","type": "object","properties": ""},
+							{"field": "paymentsInstanceRecord.paymentConfiguration.directDebitMandateReference.directDebitMandateSettings","type": "object","properties": ""},
+							{"field": "paymentsInstanceRecord.paymentTransaction.paymentTransactionAmount","type": "number","format": "float"}
+						],
+						"headers": {
+							"request": {
+							},
+							"response": {
+							}
+						},
+						"errors": {
+							"400": {
+								
+							},
+							"500": {
+								
+							}
+						},
+						"version": "0.1"
+					},
+					"RetrieveCurrentAccountBehaviorQualifierReferenceIds": {
+					}
+				},
+				"sbq": [
+					{"base_method": "abc","name": "sub","values": ["abc","def"]}
+				],
+				"endpoints": [
+					{"base_method": "abc","name": "tst"}
+				]
+			}
+		}
+	}
+}
