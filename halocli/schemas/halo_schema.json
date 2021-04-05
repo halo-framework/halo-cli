@@ -5,6 +5,18 @@
 	"description": "Halo framework settings with all app components and elements",
 	"type": "object",
 	"properties": {
+		"cli": {
+			"type": "string",
+			"maxLength": 128
+		},
+		"swagger": {
+			"type": "string",
+			"maxLength": 128
+		},
+		"bian_api": {
+			"type": "string",
+			"maxLength": 128
+		},
 		"application_name": {
 			"type": "string",
 			"maxLength": 128
@@ -85,7 +97,7 @@
 																			},
 																			"description": {
 																				"type": "string",
-																				"maxLength": 115,
+																				"maxLength": 350,
 																				"format": "[a-zA-Z0-9_]"
 																			},
 																			"example": {
@@ -207,8 +219,7 @@
 																]
 															},
 															"properties": {
-																"type": "string",
-																"maxLength": 128
+																"type": "object"
 															},
 															"format": {
 																"enum": [
@@ -222,6 +233,16 @@
 																	"date-time",
 																	"password"
 																]
+															},
+															"pattern": {
+																"type": "string",
+																"maxLength": 115
+															},
+															"minLength": {
+																"type": "integer"
+															},
+															"maxLength": {
+																"type": "integer"
 															}
 														}
 													}

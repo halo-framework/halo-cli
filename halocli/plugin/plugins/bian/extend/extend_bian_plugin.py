@@ -216,11 +216,19 @@ class Plugin():
                                         propsx = None
                                         break
                             if propsx:
-                                propsx['type'] = target['type']
+                                if "type" in target:
+                                    propsx['type'] = target['type']
+                                if propsx['type'] == "string":
+                                    if "pattern" in target:
+                                        propsx['pattern'] = target['pattern']
+                                    if "minLength" in target:
+                                        propsx['minLength'] = target['minLength']
+                                    if "maxLength" in target:
+                                        propsx['maxLength'] = target['maxLength']
                                 if "format" in target:
                                     propsx['format'] = target['format']
                                 if 'properties' in target:
-                                    propsx['properties'] = {}
+                                    propsx['properties'] = target['properties']
                 data['paths'][k] = new_m
             self.halo.cli.log("finished refactor successfully")
         # fix the response and add
@@ -343,6 +351,15 @@ class Plugin():
                                         i = i + 1
                                     type = target['type']
                                     propsx['type'] = type
+                                    if propsx['type'] == "string":
+                                        if "pattern" in target:
+                                            propsx['pattern'] = target['pattern']
+                                        if "minLength" in target:
+                                            propsx['minLength'] = target['minLength']
+                                        if "maxLength" in target:
+                                            propsx['maxLength'] = target['maxLength']
+                                    if 'properties' in target:
+                                        propsx['properties'] = target['properties']
             data['paths'][k] = new_m
 
     def after_refactor_generate(self):
