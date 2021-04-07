@@ -4,18 +4,33 @@
 	"title": "Schema for halo settings",
 	"description": "Halo framework settings with all app components and elements",
 	"type": "object",
+	"required": [
+			"cli","swagger","bian_api","application_name","mservices"
+		],
 	"properties": {
 		"cli": {
 			"type": "string",
-			"maxLength": 128
+			"enum": [
+				"0.2.2",
+				"0.2.3",
+				"0.2.4"
+			]
 		},
 		"swagger": {
 			"type": "string",
-			"maxLength": 128
+			"enum": [
+				"2.0",
+				"3.0",
+				"3.0.1"
+			]
 		},
 		"bian_api": {
 			"type": "string",
-			"maxLength": 128
+			"enum": [
+				"8.0",
+				"9.0",
+				"9.1"
+			]
 		},
 		"application_name": {
 			"type": "string",
