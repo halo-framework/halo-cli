@@ -185,6 +185,13 @@ class Plugin():
                     clear.append(d)
         for d in clear:
             del data['paths'][d]
+        if "dictionary" in self.halo.settings:
+            if "components" not in data:
+                data["components"] = {}
+            if "schemas" not in data["components"]:
+                data["components"]["schemas"] = {}
+            for var in self.halo.settings["dictionary"]:
+                data["components"]["schemas"][var] = self.halo.settings["dictionary"][var]
         if self.refactor or self.all:
             for k in tmp:
                 new_m = tmp[k]
@@ -202,7 +209,8 @@ class Plugin():
                             props = new_m[o]['responses']['201']['schema']['items']['properties']
                         else:
                             props = new_m[o]['responses']['201']['schema']['properties']
-                    for p in props:
+                    #for p in props:
+                    if True:
                         for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
                             fields = target['field'].split(".")
                             propsx = props
@@ -216,6 +224,8 @@ class Plugin():
                                         propsx = None
                                         break
                             if propsx:
+                                #refactor block
+                                #self.halo.cli.log(str(target)+"$"+str(o))
                                 if "type" in target:
                                     propsx['type'] = target['type']
                                 if propsx['type'] == "string":
@@ -225,6 +235,9 @@ class Plugin():
                                         propsx['minLength'] = target['minLength']
                                     if "maxLength" in target:
                                         propsx['maxLength'] = target['maxLength']
+                                if "$ref" in target:
+                                    if target['$ref'] in self.halo.settings['dictionary']:
+                                        propsx['$ref'] = '#/definitions/' + target['$ref']
                                 if "format" in target:
                                     propsx['format'] = target['format']
                                 if 'properties' in target:
@@ -253,7 +266,8 @@ class Plugin():
                             props = new_m[o]['responses']['201']['schema']['items']['properties']
                         else:
                             props = new_m[o]['responses']['201']['schema']['properties']
-                    for p in props:
+                    #for p in props:
+                    if True:
                         for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields']:
                             fields = target.split(".")
                             propsx = props
@@ -268,8 +282,8 @@ class Plugin():
                                         break
                             if propsx:
                                 for fld in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target]:
-                                    type = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
-                                    propsx['properties'][fld] = type
+                                    val = self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['added_fields'][target][fld]
+                                    propsx['properties'][fld] = val
                                     self.halo.cli.log(new_m['get']['operationId'] + ":" +fld)
                 data['paths'][k] = new_m
             self.halo.cli.log("finished fields successfully")
@@ -360,6 +374,9 @@ class Plugin():
                                             propsx['maxLength'] = target['maxLength']
                                     if 'properties' in target:
                                         propsx['properties'] = target['properties']
+                                    if "$ref" in target:
+                                        if target['$ref'] in self.halo.settings['dictionary']:
+                                            propsx['$ref'] = '#/definitions/' + target['$ref']
             data['paths'][k] = new_m
 
     def after_refactor_generate(self):

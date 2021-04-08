@@ -43,6 +43,9 @@
 				"maxLength": 128
 			}
 		},
+		"dictionary": {
+
+		},
 		"mservices": {
 			"type": "object",
 			"patternProperties": {
@@ -107,7 +110,8 @@
 																					"number",
 																					"integer",
 																					"boolean",
-																					"object"
+																					"object",
+																					"array"
 																				]
 																			},
 																			"description": {
@@ -230,7 +234,8 @@
 																	"string",
 																	"number",
 																	"integer",
-																	"boolean"
+																	"boolean",
+																	"array"
 																]
 															},
 															"properties": {
