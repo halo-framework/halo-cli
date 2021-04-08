@@ -186,12 +186,19 @@ class Plugin():
         for d in clear:
             del data['paths'][d]
         if "dictionary" in self.halo.settings:
-            if "components" not in data:
-                data["components"] = {}
-            if "schemas" not in data["components"]:
-                data["components"]["schemas"] = {}
+            dict_schemas = "schemas"
+            dict_name = "components"
+            if data["swagger"] in ["2.0"]:
+                dict_name = "definitions"
+                dict_schemas = None
+            if dict_name not in data:
+                data[dict_name] = {}
+            dict_target = data[dict_name]
+            if dict_schemas and dict_schemas not in data[dict_name]:
+                data[dict_name][dict_schemas] = {}
+                dict_target = data[dict_name][dict_schemas]
             for var in self.halo.settings["dictionary"]:
-                data["components"]["schemas"][var] = self.halo.settings["dictionary"][var]
+                dict_target[var] = self.halo.settings["dictionary"][var]
         if self.refactor or self.all:
             for k in tmp:
                 new_m = tmp[k]
