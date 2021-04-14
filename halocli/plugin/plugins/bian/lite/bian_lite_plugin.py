@@ -159,9 +159,13 @@ class Plugin():
                 if path.endswith("/activation") or path.endswith("/configuration") or path.endswith("/feedback"):
                     del data['paths'][k]
                     continue
-                if path.find(sdfph) >= 0:
+                if path.find("/{sd-reference-id}") >= 0:
                     del data['paths'][k]
-                    path = path.replace(sdfph,"").replace("/{sd-reference-id}","")#.replace("-reference-","-ref-")
+                    path = path.replace("/{sd-reference-id}","")#.replace("-reference-","-ref-")
+                if path.find(sdfph) >= 0:
+                    if k in data['paths']:
+                        del data['paths'][k]
+                    path = path.replace(sdfph,"")
                 for o in new_m:# get,put,post,delete
                     for p in new_m[o]['parameters']:
                         #print(path+":"+p['name'])
