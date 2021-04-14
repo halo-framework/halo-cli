@@ -313,6 +313,7 @@ class Builder:
         self.plugins = [
             #"halocli.plugin.plugins.bian.extend.test_bian_plugin.Plugin",
             "halocli.plugin.plugins.bian.extend.extend_bian_plugin.Plugin",
+            "halocli.plugin.plugins.bian.lite.bian_lite_plugin.Plugin",
             "halocli.plugin.plugins.bian.segregate.cqrs_bian_plugin.Plugin",
             "halocli.plugin.plugins.create.create_plugin.Plugin",
             "halocli.plugin.plugins.schema.schema_plugin.Plugin",
