@@ -121,6 +121,26 @@ class Plugin():
         self.options = options
         #do more
 
+    def fix_props(self,props,sdfp):
+        propsx = copy.deepcopy(props)
+        for name in propsx:
+            if name.endswith("ServicingSessionReference"):
+                del props[name]
+                continue
+            if name.endswith("InstanceReportRecord") or name.endswith("InstanceReport"):
+                del props[name]
+                continue
+            if name.endswith("InstanceAnalysis"):
+                del props[name]
+                continue
+            if name.endswith("RetrieveActionResponse"):
+                del props[name]
+                continue
+            if name.startswith(sdfp):
+                props[name.replace(sdfp, "")] = propsx[name]
+                del props[name]
+                continue
+
 
     def before_swagger_generate(self):
         for o in self.options:
@@ -161,19 +181,25 @@ class Plugin():
                     continue
                 if path.find("/{sd-reference-id}") >= 0:
                     del data['paths'][k]
-                    path = path.replace("/{sd-reference-id}","")#.replace("-reference-","-ref-")
+                    path = path.replace("/{sd-reference-id}","").replace("-reference-","-ref-")
                 if path.find(sdfph) >= 0:
                     if k in data['paths']:
                         del data['paths'][k]
                     path = path.replace(sdfph,"")
                 for o in new_m:# get,put,post,delete
+                    rem_p = None
                     for p in new_m[o]['parameters']:
-                        #print(path+":"+p['name'])
+                        print(path+":"+p['name'])
                         if p['name'].find("sd-reference-id") >= 0:
-                            new_m[o]['parameters'].remove(p)
+                            rem_p = p
                             continue
-                        #if p['name'].find("-reference-") >= 0:
-                        #    p['name'] = p['name'].replace("-reference-","-ref-")
+                        if p['name'].find("-reference-") >= 0:
+                            p['name'] = p['name'].replace("-reference-","-ref-")
+                        if p['name'].find("body") >= 0:
+                            props = p['schema']['properties']
+                            self.fix_props(props, sdfp)
+                    if rem_p:
+                        new_m[o]['parameters'].remove(rem_p)
                     if '200' in new_m[o]['responses']:
                         if 'items' in new_m[o]['responses']['200']['schema']:
                             if 'properties' in new_m[o]['responses']['200']['schema']['items']:
@@ -187,18 +213,7 @@ class Plugin():
                             props = new_m[o]['responses']['201']['schema']['items']['properties']
                         else:
                             props = new_m[o]['responses']['201']['schema']['properties']
-                    propsx = copy.deepcopy(props)
-                    for name in propsx:
-                        if name.endswith("ServicingSessionReference"):
-                            del props[name]
-                            continue
-                        if name.endswith("InstanceReportRecord") or name.endswith("InstanceReport"):
-                            del props[name]
-                            continue
-                        if name.startswith(sdfp):
-                            props[name.replace(sdfp,"")] = propsx[name]
-                            del props[name]
-                            continue
+                    self.fix_props(props,sdfp)
                 data['paths'][path] = new_m
         self.halo.cli.log("finished extend successfully")
 
