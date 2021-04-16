@@ -129,6 +129,21 @@ class Plugin():
                 del props[name]
                 continue
 
+    def get_sdfph(self,data):
+        #/current-account/{sd-reference-id}/current-account-fulfillment-arrangement/{cr-reference-id}
+        for d in data['paths']:
+            if d.endswith("/{cr-reference-id}"):
+                j = d.index("/{cr-reference-id}")
+                i = d.index("/{sd-reference-id}")
+                return d[i+18:j]
+
+    def get_sdfp(self,data):
+        #return self.get_sdfph(data).replace("-","").replace("/","")
+        s = self.get_sdfph(data)
+        while "-" in s:
+            i = s.index("-")
+            s = s[:i] + s[i+1].swapcase() + s[i+2:]
+        return s.replace("/","")
 
     def before_swagger_generate(self):
         for o in self.options:
@@ -150,8 +165,8 @@ class Plugin():
 
     def swagger_generate(self):
         data = self.data
-        sdfph = "/current-account-fulfillment-arrangement"
-        sdfp = "currentAccountFulfillmentArrangement"
+        sdfph = self.get_sdfph(data)#"/current-account-fulfillment-arrangement"
+        sdfp = self.get_sdfp(data)#"currentAccountFulfillmentArrangement"
         tmp = {}
         for d in data['paths']:
             m = data['paths'][d]
