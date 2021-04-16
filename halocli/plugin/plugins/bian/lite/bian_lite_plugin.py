@@ -215,6 +215,9 @@ class Plugin():
                             props = new_m[o]['responses']['201']['schema']['properties']
                     self.fix_props(props,sdfp)
                 data['paths'][path] = new_m
+        if not data["paths"].__contains__("$ref"):
+            del data['definitions']
+            data['definitions'] = {}
         self.halo.cli.log("finished extend successfully")
 
 
