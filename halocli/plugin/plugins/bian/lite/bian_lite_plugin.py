@@ -83,21 +83,9 @@ class Plugin():
                         'shortcut': 'p',
                         'required': True
                     },
-                    'fields': {
-                        'usage': 'add fields',
+                    'file': {
+                        'usage': 'add swagger file',
                         'shortcut': 'f'
-                    },
-                    'refactor': {
-                        'usage': 'refactor existing fields',
-                        'shortcut': 'r'
-                    },
-                    'headers': {
-                        'usage': 'add headers',
-                        'shortcut': 'h'
-                    },
-                    'errors': {
-                        'usage': 'add errors',
-                        'shortcut': 'e'
                     },
                     'all': {
                         'usage': 'run all options',
@@ -150,17 +138,14 @@ class Plugin():
                 self.path = o['path']
             if 'all' in o:
                 self.all = o['all']
-            if 'fields' in o:
-                self.fields = o['fields']
-            if 'refactor' in o:
-                self.refactor = o['refactor']
-            if 'headers' in o:
-                self.headers = o['headers']
-            if 'errors' in o:
-                self.errors = o['errors']
+            if 'file' in o:
+                self.swagger_source = o['file']
         if not self.service:
             raise Exception("no service found")
-        urls = self.halo.settings['mservices'][self.service]['record']['path']
+        if self.swagger_source:
+            urls = self.swagger_source
+        else:
+            urls = self.halo.settings['mservices'][self.service]['record']['path']
         self.data = Util.analyze_swagger(urls)
 
     def swagger_generate(self):
@@ -172,7 +157,7 @@ class Plugin():
             m = data['paths'][d]
             new_m = copy.deepcopy(m)
             tmp[d] = new_m
-        if self.refactor or self.all:
+        if self.all:
             for k in tmp:
                 new_m = tmp[k]
                 path = k
@@ -237,7 +222,7 @@ class Plugin():
                 dir_tmp = tempfile.TemporaryDirectory()
                 file_path = os.path.join(dir_tmp.name, str(uuid.uuid4()) + "_extend.json")
             logger.debug(file_path)
-            f = open(file_path, "a")
+            f = open(file_path, "w")
             f.write("")
             f.close()
             Util.dump_file(file_path, self.data)
@@ -251,75 +236,3 @@ class Plugin():
         except Exception as e:
             raise HaloPluginException(str(e))
 
-    def refactor_generate(self):
-        data = self.data
-        tmp = {}
-        for d in data['paths']:
-            m = data['paths'][d]
-            if 'get' in m:
-                if 'ReferenceIdsExtend' in m['get']['operationId']:
-                    new_m = copy.deepcopy(m)
-                    tmp[d] = new_m
-        # fix the response and add
-        for k in tmp:
-            # bq methods
-            ref_m = tmp[k]
-            new_m = copy.deepcopy(ref_m)
-            if '200' in new_m['get']['responses']:
-                if 'items' in new_m['get']['responses']['200']['schema']:
-                    props = new_m['get']['responses']['200']['schema']['items']['properties']
-                else:
-                    props = new_m['get']['responses']['200']['schema']['properties']
-            else:
-                if 'items' in new_m['get']['responses']['201']['schema']:
-                    props = new_m['get']['responses']['201']['schema']['items']['properties']
-                else:
-                    props = new_m['get']['responses']['201']['schema']['properties']
-            for p in props:
-                if "methods" in self.halo.settings['mservices'][self.service]['record']:
-                    for mthd in self.halo.settings['mservices'][self.service]['record']['methods']:
-                        if mthd == new_m['get']['operationId']:
-                            for target in self.halo.settings['mservices'][self.service]['record']['methods'][mthd]['refactor']:
-                                fields = target['field'].split(".")
-                                if p.endswith(fields[0]):
-                                    #self.halo.cli.log(new_m['get']['operationId']+":"+p)
-                                    size = len(fields)
-                                    i = 1
-                                    propsx = props[p]
-                                    while i < size:
-                                        name = fields[i]
-                                        propsx = propsx['properties'][name]
-                                        i = i + 1
-                                    type = target['type']
-                                    propsx['type'] = type
-                                    if propsx['type'] == "string":
-                                        if "pattern" in target:
-                                            propsx['pattern'] = target['pattern']
-                                        if "minLength" in target:
-                                            propsx['minLength'] = target['minLength']
-                                        if "maxLength" in target:
-                                            propsx['maxLength'] = target['maxLength']
-                                    if 'properties' in target:
-                                        propsx['properties'] = target['properties']
-                                    if "$ref" in target:
-                                        if target['$ref'] in self.halo.settings['dictionary']:
-                                            propsx['$ref'] = '#/definitions/' + target['$ref']
-            data['paths'][k] = new_m
-
-    def after_refactor_generate(self):
-        pass
-
-    def refactor_write(self):
-        self.file_write()
-
-    def mapping_generate(self):
-        pass
-
-    def mapping_write(self):
-        pass
-
-    def filter_generate(self):
-        pass
-
-    def filter_write(self):
-        pass

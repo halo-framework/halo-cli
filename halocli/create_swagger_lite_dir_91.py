@@ -12,6 +12,7 @@ dest = sys.argv[2]
 do_copy = True
 #[print(x[0]) for x in os.walk(directory)]
 cnt = 1
+builder = start(False)
 runner = CliRunner()
 for x in os.walk(directory):
     dir_files = x[2]
@@ -36,7 +37,7 @@ for x in os.walk(directory):
             json_name = x[0]+'\\'+f
         if os.path.isfile(json_name) and do_copy:
             shutil.copy(json_name, dest+'\\'+f_name+'.json')
-            str1 = '-s C:\dev\projects\halo\halocli\\tests\gen8\halo_settings.json lite create -a all  -p C:\dev\projects\halo\halocli\\tests\gen8'
+            str1 = '--debug -s C:\dev\projects\halo\halo-cli\\tests\gen8\halo_settings.json lite create -a all -s litex -p C:\dev\projects\halo\halo-cli\\tests\gen8 -f '+f_name+'.json'
             result = runner.invoke(cli,str1.split(" "))
             #result = self.runner.invoke(cli, '-s .\halo_settings.json cqrs method -s halo_current_account -p C:\dev\projects\halo\halo-cli\\tests -i TaskRecord'.split(" "))
             print(json_name+":"+str(result.exit_code)+":"+result.output)
