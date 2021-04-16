@@ -232,7 +232,7 @@ class Plugin():
         try:
             path = self.path
             if path:
-                file_path = os.path.join(path, str(uuid.uuid4()) + "_extend.json")
+                file_path = os.path.join(path, str(self.swagger_source.replace(".json","_lite.json")))
             else:
                 dir_tmp = tempfile.TemporaryDirectory()
                 file_path = os.path.join(dir_tmp.name, str(uuid.uuid4()) + "_extend.json")
