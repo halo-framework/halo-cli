@@ -73,13 +73,13 @@ class Plugin():
                 'usage': "Create a lite bian swagger file",
                 'lifecycleEvents': ['generate', 'write'],
                 'options': {
-                    'service': {
-                        'usage': 'Name of the service',
-                        'shortcut': 's',
+                    'destination': {
+                        'usage': 'Path of the destination dir',
+                        'shortcut': 'd',
                         'required': True
                     },
                     'path': {
-                        'usage': 'Path of the swagger file dir',
+                        'usage': 'Path of the source swagger file dir',
                         'shortcut': 'p',
                         'required': True
                     },
@@ -147,20 +147,20 @@ class Plugin():
 
     def before_swagger_generate(self):
         for o in self.options:
-            if 'service' in o:
-                self.service = o['service']
+            if 'destination' in o:
+                self.destination = o['destination']
             if 'path' in o:
                 self.path = o['path']
             if 'all' in o:
                 self.all = o['all']
             if 'file' in o:
                 self.swagger_source = o['file']
-        if not self.service:
-            raise Exception("no service found")
+        if not self.destination:
+            raise Exception("no destination found")
         if self.swagger_source:
-            urls = self.swagger_source
+            urls = os.path.join(self.path, self.swagger_source)
         else:
-            urls = self.halo.settings['mservices'][self.service]['record']['path']
+            urls = os.path.join('.', self.swagger_source)#self.halo.settings['mservices'][self.service]['record']['path']
         self.data = Util.analyze_swagger(urls)
 
     def swagger_generate(self):
@@ -229,12 +229,12 @@ class Plugin():
 
     def file_write(self):
         try:
-            path = self.path
+            path = self.destination
             if path:
                 file_path = os.path.join(path, str(self.swagger_source.replace(".json","_lite.json")))
             else:
                 dir_tmp = tempfile.TemporaryDirectory()
-                file_path = os.path.join(dir_tmp.name, str(uuid.uuid4()) + "_extend.json")
+                file_path = os.path.join(dir_tmp.name, str(uuid.uuid4()) + "_lite.json")
             logger.debug(file_path)
             f = open(file_path, "w")
             f.write("")
