@@ -10,7 +10,7 @@
 		"litex": {
 			"basePath": "/apiV1",
 			"record": {
-				"company": "LEUMI BANK",
+				"company": "ABC BANK",
 				"path": "current-account.json",
 				"name":"Current Account",
 				"id":137,
