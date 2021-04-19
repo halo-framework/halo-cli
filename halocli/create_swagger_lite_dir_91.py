@@ -43,6 +43,6 @@ for x in os.walk(directory):
         #result = self.runner.invoke(cli, '-s .\halo_settings.json cqrs method -s halo_current_account -p C:\dev\projects\halo\halo-cli\\tests -i TaskRecord'.split(" "))
         if result.exit_code != 0:
             print("error:"+f_name)
-        print(json_name+":"+str(result.exit_code)+":"+result.output+":"+result.stderr)
+        print(json_name+":"+str(result.exit_code)+":"+result.output)
 
 

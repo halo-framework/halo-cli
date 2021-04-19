@@ -81,6 +81,7 @@ class Cmd():
                     stack = traceback.format_exc()
                     print(str(stack))
                 self.cli.error("Error in HALO CLI Command : " + str(e))
+                sys.exit(1)
 
 
         func.__name__ = name

@@ -161,13 +161,20 @@ class Plugin():
             urls = os.path.join(self.path, self.swagger_source)
         else:
             urls = os.path.join('.', self.swagger_source)#self.halo.settings['mservices'][self.service]['record']['path']
-        self.data = Util.analyze_swagger(urls)
+        try:
+            self.data = Util.analyze_swagger(urls)
+        except Exception as e:
+            self.halo.cli.error("error in source swagger file validation:"+self.swagger_source+"->"+str(e))
+            raise e
 
     def swagger_generate(self):
         data = self.data
         sdfph = self.get_sdfph(data)#"/current-account-fulfillment-arrangement"
+        self.halo.cli.log("sdfph:" + sdfph)
         sdfp = self.get_sdfp(data)#"currentAccountFulfillmentArrangement"
+        self.halo.cli.log("sdfp:" + sdfp)
         tmp = {}
+        data["info"]["title"] = data["info"]["title"]+"(Lite)"
         for d in data['paths']:
             m = data['paths'][d]
             new_m = copy.deepcopy(m)
@@ -185,11 +192,16 @@ class Plugin():
                 if path.find(sdfph) >= 0:
                     if k in data['paths']:
                         del data['paths'][k]
-                    path = path.replace(sdfph,"")
+                    occr = path.rfind(sdfph)
+                    if occr > 0:
+                        path = path[:occr]+path[occr:].replace(sdfph,"")
+                if len(path) == 0:
+                    print("x")
                 for o in new_m:# get,put,post,delete
+                    self.halo.cli.log("path:" + path+" op:"+o)
                     rem_p = None
                     for p in new_m[o]['parameters']:
-                        print(path+":"+p['name'])
+                        self.halo.cli.log(path+":"+p['name'])
                         if p['name'].find("sd-reference-id") >= 0:
                             rem_p = p
                             continue
@@ -222,7 +234,11 @@ class Plugin():
 
     def after_swagger_generate(self):
         data = self.data
-        Util.validate_swagger(data)
+        try:
+            Util.validate_swagger(data)
+        except Exception as e:
+            self.halo.cli.error("error in generated swagger file validation:"+self.swagger_source+"->"+str(e))
+            raise e
 
     def swagger_write(self):
         self.file_write()
