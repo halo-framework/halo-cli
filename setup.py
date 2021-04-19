@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # twine upload dist/halo-cli-0.1.tar.gz -r pypi
 setup(
     name='halo-cli',
-    version='0.2.12',
+    version='0.2.13',
     packages=find_packages(),
     data_files=['halocli/schemas/halo_schema.json'],
     include_package_data=True,
@@ -16,5 +16,5 @@ setup(
         [console_scripts]
         hlo=halocli.cli:start
     ''',
-    python_requires='>=3.6',
+    python_requires='>=3.7',
 )
