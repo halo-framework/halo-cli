@@ -1,0 +1,23 @@
+{
+	"cli": "0.2.2",
+	"swagger": "2.0",
+	"bian_api": "9.0",
+	"application_name": "bian_service_domains",
+	"plugins":[
+
+	],
+	"mservices": {
+		"lite_current_account": {
+			"basePath": "/apiV1",
+			"record": {
+				"company": "ABC BANK",
+				"path": "current-account.json",
+				"name": "Current Account",
+				"id": 137,
+				"exclude": true,
+				"methods": {
+				}
+			}
+		}
+	}
+}
