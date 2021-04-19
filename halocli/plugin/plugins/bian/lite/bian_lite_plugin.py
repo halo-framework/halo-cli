@@ -195,8 +195,6 @@ class Plugin():
                     occr = path.rfind(sdfph)
                     if occr > 0:
                         path = path[:occr]+path[occr:].replace(sdfph,"")
-                if len(path) == 0:
-                    print("x")
                 for o in new_m:# get,put,post,delete
                     self.halo.cli.log("path:" + path+" op:"+o)
                     rem_p = None
